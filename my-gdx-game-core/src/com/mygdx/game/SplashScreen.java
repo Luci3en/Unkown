@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 
 public class SplashScreen implements Screen {
@@ -23,13 +25,21 @@ public class SplashScreen implements Screen {
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 
 		batch = new SpriteBatch();
-		Texture texture = new Texture(Gdx.files.internal("img/Logo.png"));
+		Texture texture = new Texture(Gdx.files.internal("img/Logo.jpg"));
 		sprite = new Sprite(texture);
 		sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		Tween.set(sprite, SpriteAccessor.APLHA).target(0).start(manager);
 		Tween.to(sprite, SpriteAccessor.APLHA, 2).target(1).start(manager);
-		Tween.to(sprite, SpriteAccessor.APLHA, 2).target(0).delay(2).start(manager);
+		Tween.to(sprite, SpriteAccessor.APLHA, 2).target(0).delay(2).start(manager).setCallback(new TweenCallback() {
+
+			@Override
+			public void onEvent(int arg0, BaseTween<?> arg1) {
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
+
+			}
+		});
+
 	}
 
 	@Override
