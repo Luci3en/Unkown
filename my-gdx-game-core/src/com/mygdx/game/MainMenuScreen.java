@@ -5,12 +5,16 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MainMenuScreen implements Screen {
 
@@ -23,19 +27,40 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void show() {
-		
+
 		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
 		blackFont = new BitmapFont(Gdx.files.internal("fonts/blackFont.fnt"));
 
 		LabelStyle labelStyle = new LabelStyle();
 		labelStyle.font = blackFont;
 		label = new Label("Unkown", labelStyle);
+		label.moveBy(100, 100);
 
-		
-		
-		TextButton button = new TextButton("TEST", textButtonStyle);
-		
-		
+		atlas = new TextureAtlas(Gdx.files.internal("skin/neutralizer-ui.atlas"));
+		skin = new Skin(atlas);
+
+		TextButtonStyle textButtonStyle = new TextButtonStyle();
+		textButtonStyle.up = skin.getDrawable("button-up");
+		textButtonStyle.down = skin.getDrawable("button-pressed");
+		textButtonStyle.pressedOffsetX = 1;
+		textButtonStyle.pressedOffsetY = -1;
+		textButtonStyle.font = blackFont;
+
+		TextButton button = new TextButton("Exit", textButtonStyle);
+
+		button.addListener(new ClickListener() {
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				
+				System.exit(0);
+				
+			}
+			
+			
+		});
+
 		stage.addActor(button);
 		stage.addActor(label);
 

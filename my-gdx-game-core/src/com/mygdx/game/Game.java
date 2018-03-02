@@ -8,7 +8,7 @@ public class Game extends com.badlogic.gdx.Game {
 
 	@Override
 	public void create() {
-		setScreen(new SplashScreen());
+		setScreen(new MainMenuScreen());
 		Gdx.app.log(TITEL, "create()");
 	}
 
