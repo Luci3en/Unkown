@@ -22,7 +22,6 @@ public class Game extends com.badlogic.gdx.Game {
 	@Override
 	public void render() {
 		super.render();
-		Gdx.app.log(TITEL, "render()");
 
 	}
 
