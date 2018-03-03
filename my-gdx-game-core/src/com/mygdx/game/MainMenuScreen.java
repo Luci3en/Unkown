@@ -1,7 +1,5 @@
 package com.mygdx.game;
 
-import javax.swing.text.TabExpander;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -23,7 +21,7 @@ public class MainMenuScreen implements Screen {
 	private TextureAtlas atlas;
 	private Skin skin;
 	private Label label;
-	private TextButton exit;
+	private TextButton exit, play;
 	private BitmapFont blackFont;
 
 	@Override
@@ -34,8 +32,6 @@ public class MainMenuScreen implements Screen {
 		blackFont = new BitmapFont(Gdx.files.internal("fonts/blackFont.fnt"));
 		atlas = new TextureAtlas(Gdx.files.internal("skin/neutralizer-ui.atlas"));
 		skin = new Skin(atlas);
-
-	
 
 		LabelStyle labelStyle = new LabelStyle();
 		labelStyle.font = blackFont;
@@ -61,18 +57,39 @@ public class MainMenuScreen implements Screen {
 
 		});
 
+		textButtonStyle.up = skin.getDrawable("button");
+		textButtonStyle.down = skin.getDrawable("button-pressed");
+		textButtonStyle.pressedOffsetX = 1;
+		textButtonStyle.pressedOffsetY = -1;
+		textButtonStyle.font = blackFont;
+		play = new TextButton("Play", textButtonStyle);
+
 		
+		play.addListener(new ClickListener() {
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+
+				((Game) Gdx.app.getApplicationListener()).setScreen(new TestScreen());
+
+			}
+
+		});
+		
+		
+
+
 		Table table = new Table();
 		table.setFillParent(true);
 		table.debug();
-		//table.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 );
-		
+
 		table.add(label);
 		table.row();
-		 table.right().bottom();
+		table.add(play);
+		table.row();
+
 		table.add(exit);
-		
-		
+
 		stage.addActor(table);
 
 	}
