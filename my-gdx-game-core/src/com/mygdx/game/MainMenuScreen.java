@@ -39,18 +39,18 @@ public class MainMenuScreen implements Screen {
 		header.setFontScale(2f);
 
 		TextButtonStyle textButtonStyle = new TextButtonStyle();
-		
+
 		textButtonStyle.up = skin.getDrawable("menu-button");
 		textButtonStyle.down = skin.getDrawable("menu-button-down");
 		textButtonStyle.over = skin.getDrawable("menu-button-over");
 		textButtonStyle.up.setMinWidth(200);
 		textButtonStyle.down.setMinWidth(200);
 		textButtonStyle.over.setMinWidth(200);
-	
+
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = blackFont;
-		
+
 		exit = new TextButton("Exit", textButtonStyle);
 
 		exit.addListener(new ClickListener() {
@@ -90,11 +90,8 @@ public class MainMenuScreen implements Screen {
 
 		Table table = new Table();
 		table.setFillParent(true);
-//		table.debug();
+		// table.debug();
 
-	
-		
-		
 		table.add(header).pad(100, 300, 100, 300);
 		table.row();
 		table.add(play).padBottom(30);
@@ -108,7 +105,7 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.1f, 0.3f , 0.4f, 1);
+		Gdx.gl.glClearColor(0.1f, 0.3f, 0.4f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		stage.act(Gdx.graphics.getDeltaTime());

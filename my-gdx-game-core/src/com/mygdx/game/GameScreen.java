@@ -7,6 +7,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -15,45 +18,52 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class GameScreen implements Screen, InputProcessor {
 
+	public static int VIEWPORT_WIDTH = 800;
+	public static int VIEWPORT_HEIGHT = 480;
+
 	private Stage stage;
+	private OrthographicCamera camera;
+	private SpriteBatch batch;
+
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer mapRendere;
-	private FirstActor player;
+	private Player player;
 
 	@Override
 	public void show() {
-		
+
 		stage = new Stage();
-		InputMultiplexer multiplexer = new InputMultiplexer();
-		Gdx.input.setInputProcessor(multiplexer);
-		multiplexer.addProcessor(this);
-		multiplexer.addProcessor(stage);
-		
-		
-		
-	
+
+		batch = new SpriteBatch();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, GameScreen.VIEWPORT_WIDTH, GameScreen.VIEWPORT_HEIGHT);
+		batch.setProjectionMatrix(camera.combined);
+
 		map = new TmxMapLoader().load("maps/map.tmx");
 		mapRendere = new OrthogonalTiledMapRenderer(map);
 
-		player = new FirstActor();
-		
+		Texture texture = new Texture(Gdx.files.internal("img/player.png"));
+		player = new Player(new Sprite(texture));
+
+		InputMultiplexer multiplexer = new InputMultiplexer();
+		Gdx.input.setInputProcessor(multiplexer);
+		multiplexer.addProcessor(this);
+		multiplexer.addProcessor(player);
+
+		// ExampleCode using Listener
 		stage.addListener(new InputListener() {
-			
+
 			public boolean keyDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, int keycode) {
-				
-				
-				if(keycode == Input.Keys.O) {
-					Gdx.app.log("show()", "set inputprocessor for stage KEY O");
+
+				if (keycode == Input.Keys.O) {
+					Gdx.app.log("show()", "set inputProcessor for stage KEY O");
 				}
 				return false;
-				
+
 			};
 		}
-				
-				
-				
-				
-				);
+
+		);
 
 	}
 
@@ -80,60 +90,35 @@ public class GameScreen implements Screen, InputProcessor {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (Gdx.input.isKeyPressed(Input.Keys.K))
+		// update()
 
-		{
-			map.getLayers().get(0).setVisible(false);
+		// ExampleCode
+		if (Gdx.input.isKeyPressed(Input.Keys.U)) {
+			Gdx.app.log("movePlayer()", "static usage of inputProcessor KEY U");
 		}
-		
-		
-		movePlayer();
-		
-		stage.getCamera().position.x = player.getX();
-		stage.getCamera().position.y = player.getY();
-		stage.getCamera().update();
-		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 
-		mapRendere.setView((OrthographicCamera) stage.getCamera());
+		// render()
+		mapRendere.setView(camera);
 		mapRendere.render();
 
-		stage.getBatch().begin();
+		batch.begin();
+		player.draw(batch, 1);
+		batch.end();
 
-		player.draw(stage.getBatch(), 1);
+		// camerMovment
+		// camera.translate(player.getX(), player.getY(), 0);
 
-		stage.getBatch().end();
-
-
-	}
-
-	public void movePlayer() {
-
-		if (Gdx.input.isKeyPressed(Input.Keys.U)) {
-			Gdx.app.log("movePlayer()", "static usage of inputprocessor KEY U");
-		}
-		
-		
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			player.setY(player.getY() + 2);
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			player.setY(player.getY() - 2);
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			player.setX(player.getX() - 2);
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			player.setX(player.getX() + 2);
-		}
+		camera.position.x = player.getX();
+		camera.position.y = player.getY();
+		camera.update();
 
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height);
+		camera.viewportHeight = height;
+		camera.viewportWidth = width;
+		camera.update();
 
 	}
 
@@ -157,12 +142,11 @@ public class GameScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean keyUp(int keyCode) {
-		
-		if(keyCode == Input.Keys.I) {
+		// ExampleCode
+		if (keyCode == Input.Keys.I) {
 			Gdx.app.log("keyUp()", "using InputProcessor Interface KEY I");
 		}
-		
-		
+
 		return false;
 	}
 
