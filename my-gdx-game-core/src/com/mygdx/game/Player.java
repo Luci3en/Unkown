@@ -5,23 +5,34 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Sprite implements InputProcessor {
 
+	private MapObjects collisionBoxes;
+	private TiledMapTileLayer collisionLayer;
 	private Vector2 velocity;
-	private float speed = 60;
+	private float speed = 120;
 	private boolean pressed_up, pressed_down, pressed_left, pressed_right;
+	private Rectangle hitBox;
 
-	public Player(Sprite sprite) {
+	public Player(Sprite sprite, MapObjects mapObjects, TiledMapTileLayer mapLayer) {
 		super(sprite);
+		this.collisionLayer = mapLayer;
+		this.collisionBoxes = mapObjects;
 		this.velocity = new Vector2();
-		this.velocity.x = speed;
-		this.velocity.y = speed;
 		this.pressed_up = false;
 		this.pressed_down = false;
 		this.pressed_left = false;
 		this.pressed_right = false;
+		this.hitBox = new Rectangle(getX(), getY(), getWidth(), getHeight());
 
 	}
 
@@ -32,23 +43,194 @@ public class Player extends Sprite implements InputProcessor {
 	}
 
 	public void update(float delta) {
+
+		velocity.x = 0;
+		velocity.y = 0;
+
 		if (pressed_left) {
-			setX(getX() - velocity.x * delta);
+			velocity.x = -speed * delta;
+
 		}
 
 		if (pressed_right) {
-			setX(getX() + velocity.x * delta);
+			velocity.x = speed * delta;
+
 		}
 
 		if (pressed_up) {
+			velocity.y = speed * delta;
 
-			setY(getY() + velocity.y * delta);
 		}
 
 		if (pressed_down) {
-			setY(getY() - velocity.y * delta);
+			velocity.y = -speed * delta;
+
 		}
 
+		move();
+
+	}
+
+	public void move() {
+		moveX();
+		moveY();
+
+	}
+
+	public void moveX() {
+
+		if (velocity.x > 0) { // Moving right
+
+			int tempX = (int) (getX() + velocity.x + hitBox.width) / 32;
+
+			if (!(isTileSolid(tempX, ((int) getY() / 32)))
+					&& !(isTileSolid(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
+
+				setX(getX() + velocity.x);
+				hitBox.setX(getX());
+
+			}
+
+
+
+		} else if (velocity.x < 0) { // Moving left
+
+			int tempX = (int) (getX() + velocity.x) / 32;
+
+			if (!(isTileSolid(tempX, ((int) getY() / 32)))
+					&& !(isTileSolid(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
+
+				setX(getX() + velocity.x);
+				hitBox.setX(getX());
+
+			}
+
+		}
+
+	}
+
+	public void moveY() {
+
+		if (velocity.y < 0) { // Moving up
+
+			int tempY = (int) (getY() + velocity.y) / 32;
+
+			if (!(isTileSolid((int) getX() / 32, tempY)) && !(isTileSolid((int) (getX() + hitBox.width) / 32, tempY))) {
+
+				setY(getY() + velocity.y);
+				hitBox.setY(getY());
+
+			}
+
+			
+			
+		} else if (velocity.x > 0) { // Moving down
+			int tempY = (int) (getY() + velocity.y + hitBox.height) / 32;
+
+			if (!(isTileSolid((int) getX() / 32, tempY)) && !(isTileSolid((int) (getX() + hitBox.width) / 32, tempY))) {
+
+				setY(getY() + velocity.y);
+				hitBox.setY(getY());
+
+			}
+		}
+
+	}
+
+	public boolean isTileSolid(int x, int y) {
+
+		Cell cell = collisionLayer.getCell(x, y);
+
+		if (cell != null) {
+			if ((Boolean) cell.getTile().getProperties().get("blocked")) {
+			}
+			return (Boolean) cell.getTile().getProperties().get("blocked");
+
+		}
+
+		return false;
+	}
+
+	public boolean intersect() {
+
+		for (MapObject mapObject : collisionBoxes) {
+
+			RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+			Rectangle rectangle = rectangleMapObject.getRectangle();
+
+			if (Intersector.overlaps(rectangle, hitBox)) {
+						
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	public MapObjects getCollisionBoxes() {
+		return collisionBoxes;
+	}
+
+	public void setCollisionBoxes(MapObjects collisionBoxes) {
+		this.collisionBoxes = collisionBoxes;
+	}
+
+	public Vector2 getVelocity() {
+		return velocity;
+	}
+
+	public void setVelocity(Vector2 velocity) {
+		this.velocity = velocity;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+
+	public boolean isPressed_up() {
+		return pressed_up;
+	}
+
+	public void setPressed_up(boolean pressed_up) {
+		this.pressed_up = pressed_up;
+	}
+
+	public boolean isPressed_down() {
+		return pressed_down;
+	}
+
+	public void setPressed_down(boolean pressed_down) {
+		this.pressed_down = pressed_down;
+	}
+
+	public boolean isPressed_left() {
+		return pressed_left;
+	}
+
+	public void setPressed_left(boolean pressed_left) {
+		this.pressed_left = pressed_left;
+	}
+
+	public boolean isPressed_right() {
+		return pressed_right;
+	}
+
+	public void setPressed_right(boolean pressed_right) {
+		this.pressed_right = pressed_right;
+	}
+
+	public Rectangle getHitBox() {
+		return hitBox;
+	}
+
+	public void setHitBox(Rectangle hitBox) {
+		this.hitBox = hitBox;
 	}
 
 	public boolean isUp() {

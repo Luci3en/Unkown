@@ -7,6 +7,7 @@ public class Game extends com.badlogic.gdx.Game {
 	public final static String TITEL = "Unknown";
 	public static int V_WIDTH;
 	public static int V_HEIGHT;
+	
 
 	@Override
 	public void create() {
