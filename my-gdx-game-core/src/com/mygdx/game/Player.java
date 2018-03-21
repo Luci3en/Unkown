@@ -72,33 +72,29 @@ public class Player extends Sprite implements InputProcessor {
 	}
 
 	public void move() {
-		moveX();
 		moveY();
+		moveX();
 
 	}
 
 	public void moveX() {
 
 		if (velocity.x > 0) { // Moving right
-
 			int tempX = (int) (getX() + velocity.x + hitBox.width) / 32;
 
-			if (!(isTileSolid(tempX, ((int) getY() / 32)))
-					&& !(isTileSolid(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
+			if (!(collisionWithTile(tempX, ((int) getY() / 32)))
+					&& !(collisionWithTile(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
 
 				setX(getX() + velocity.x);
 				hitBox.setX(getX());
 
 			}
 
-
-
 		} else if (velocity.x < 0) { // Moving left
-
 			int tempX = (int) (getX() + velocity.x) / 32;
 
-			if (!(isTileSolid(tempX, ((int) getY() / 32)))
-					&& !(isTileSolid(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
+			if (!(collisionWithTile(tempX, ((int) getY() / 32)))
+					&& !(collisionWithTile(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
 
 				setX(getX() + velocity.x);
 				hitBox.setX(getX());
@@ -112,40 +108,37 @@ public class Player extends Sprite implements InputProcessor {
 	public void moveY() {
 
 		if (velocity.y < 0) { // Moving up
-
 			int tempY = (int) (getY() + velocity.y) / 32;
 
-			if (!(isTileSolid((int) getX() / 32, tempY)) && !(isTileSolid((int) (getX() + hitBox.width) / 32, tempY))) {
+			if (!(collisionWithTile(((int) getX() / 32), tempY))
+					&& !(collisionWithTile((int) ((getX() + hitBox.width) / 32), tempY))) {
 
 				setY(getY() + velocity.y);
 				hitBox.setY(getY());
 
 			}
 
-			
-			
-		} else if (velocity.x > 0) { // Moving down
+		} else if (velocity.y > 0) { // Moving down
 			int tempY = (int) (getY() + velocity.y + hitBox.height) / 32;
 
-			if (!(isTileSolid((int) getX() / 32, tempY)) && !(isTileSolid((int) (getX() + hitBox.width) / 32, tempY))) {
+			if (!(collisionWithTile((int) getX() / 32, tempY))
+					&& !(collisionWithTile((int) (getX() + hitBox.width) / 32, tempY))) {
 
 				setY(getY() + velocity.y);
 				hitBox.setY(getY());
 
 			}
+
 		}
 
 	}
 
-	public boolean isTileSolid(int x, int y) {
+	public boolean collisionWithTile(int x, int y) {
 
 		Cell cell = collisionLayer.getCell(x, y);
 
 		if (cell != null) {
-			if ((Boolean) cell.getTile().getProperties().get("blocked")) {
-			}
 			return (Boolean) cell.getTile().getProperties().get("blocked");
-
 		}
 
 		return false;
@@ -159,7 +152,7 @@ public class Player extends Sprite implements InputProcessor {
 			Rectangle rectangle = rectangleMapObject.getRectangle();
 
 			if (Intersector.overlaps(rectangle, hitBox)) {
-						
+
 				return true;
 			} else {
 				return false;
