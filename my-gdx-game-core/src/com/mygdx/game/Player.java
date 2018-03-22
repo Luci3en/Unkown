@@ -5,28 +5,22 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Sprite implements InputProcessor {
 
-	private MapObjects collisionBoxes;
 	private TiledMapTileLayer collisionLayer;
 	private Vector2 velocity;
-	private float speed = 120;
+	private float speed = 240;
 	private boolean pressed_up, pressed_down, pressed_left, pressed_right;
 	private Rectangle hitBox;
 
-	public Player(Sprite sprite, MapObjects mapObjects, TiledMapTileLayer mapLayer) {
+	public Player(Sprite sprite, TiledMapTileLayer mapLayer) {
 		super(sprite);
 		this.collisionLayer = mapLayer;
-		this.collisionBoxes = mapObjects;
 		this.velocity = new Vector2();
 		this.pressed_up = false;
 		this.pressed_down = false;
@@ -72,6 +66,7 @@ public class Player extends Sprite implements InputProcessor {
 	}
 
 	public void move() {
+
 		moveY();
 		moveX();
 
@@ -80,10 +75,10 @@ public class Player extends Sprite implements InputProcessor {
 	public void moveX() {
 
 		if (velocity.x > 0) { // Moving right
-			int tempX = (int) (getX() + velocity.x + hitBox.width) / 32;
+			int tempX = (int) (getX() + velocity.x + hitBox.width) / GameScreen.TILE_PIXEL_WIDTH;
 
-			if (!(collisionWithTile(tempX, ((int) getY() / 32)))
-					&& !(collisionWithTile(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
+			if (!(collisionWithTile(tempX, ((int) getY() / GameScreen.TILE_PIXEL_HEIGHT))) && !(collisionWithTile(tempX,
+					(int) (getY() + hitBox.getHeight()) / GameScreen.TILE_PIXEL_HEIGHT))) {
 
 				setX(getX() + velocity.x);
 				hitBox.setX(getX());
@@ -91,10 +86,10 @@ public class Player extends Sprite implements InputProcessor {
 			}
 
 		} else if (velocity.x < 0) { // Moving left
-			int tempX = (int) (getX() + velocity.x) / 32;
+			int tempX = (int) (getX() + velocity.x) / GameScreen.TILE_PIXEL_WIDTH;
 
-			if (!(collisionWithTile(tempX, ((int) getY() / 32)))
-					&& !(collisionWithTile(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
+			if (!(collisionWithTile(tempX, ((int) getY() / GameScreen.TILE_PIXEL_HEIGHT))) && !(collisionWithTile(tempX,
+					(int) (getY() + hitBox.getHeight()) / GameScreen.TILE_PIXEL_HEIGHT))) {
 
 				setX(getX() + velocity.x);
 				hitBox.setX(getX());
@@ -108,10 +103,10 @@ public class Player extends Sprite implements InputProcessor {
 	public void moveY() {
 
 		if (velocity.y < 0) { // Moving up
-			int tempY = (int) (getY() + velocity.y) / 32;
+			int tempY = (int) (getY() + velocity.y) / GameScreen.TILE_PIXEL_HEIGHT;
 
-			if (!(collisionWithTile(((int) getX() / 32), tempY))
-					&& !(collisionWithTile((int) ((getX() + hitBox.width) / 32), tempY))) {
+			if (!(collisionWithTile(((int) getX() / GameScreen.TILE_PIXEL_WIDTH), tempY))
+					&& !(collisionWithTile((int) ((getX() + hitBox.width) / GameScreen.TILE_PIXEL_WIDTH), tempY))) {
 
 				setY(getY() + velocity.y);
 				hitBox.setY(getY());
@@ -119,7 +114,7 @@ public class Player extends Sprite implements InputProcessor {
 			}
 
 		} else if (velocity.y > 0) { // Moving down
-			int tempY = (int) (getY() + velocity.y + hitBox.height) / 32;
+			int tempY = (int) (getY() + velocity.y + hitBox.height) / GameScreen.TILE_PIXEL_HEIGHT;
 
 			if (!(collisionWithTile((int) getX() / 32, tempY))
 					&& !(collisionWithTile((int) (getX() + hitBox.width) / 32, tempY))) {
@@ -135,40 +130,37 @@ public class Player extends Sprite implements InputProcessor {
 
 	public boolean collisionWithTile(int x, int y) {
 
-		Cell cell = collisionLayer.getCell(x, y);
+		if (x <= GameScreen.MAP_WIDTH && y <= GameScreen.MAP_HEIGHT && x >= 0 && y >= 0) {
+			Cell cell = collisionLayer.getCell(x, y);
+			
+			if (cell != null) {
 
-		if (cell != null) {
-			return (Boolean) cell.getTile().getProperties().get("blocked");
-		}
-
-		return false;
-	}
-
-	public boolean intersect() {
-
-		for (MapObject mapObject : collisionBoxes) {
-
-			RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
-			Rectangle rectangle = rectangleMapObject.getRectangle();
-
-			if (Intersector.overlaps(rectangle, hitBox)) {
-
-				return true;
-			} else {
-				return false;
+				return (Boolean) cell.getTile().getProperties().get("blocked");
 			}
+		} else {
+			return true;
 		}
 
 		return false;
 	}
 
-	public MapObjects getCollisionBoxes() {
-		return collisionBoxes;
-	}
-
-	public void setCollisionBoxes(MapObjects collisionBoxes) {
-		this.collisionBoxes = collisionBoxes;
-	}
+	// public boolean intersect() {
+	//
+	// for (MapObject mapObject : name) {
+	//
+	// RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+	// Rectangle rectangle = rectangleMapObject.getRectangle();
+	//
+	// if (Intersector.overlaps(rectangle, hitBox)) {
+	//
+	// return true;
+	// } else {
+	// return false;
+	// }
+	// }
+	//
+	// return false;
+	// }
 
 	public Vector2 getVelocity() {
 		return velocity;
