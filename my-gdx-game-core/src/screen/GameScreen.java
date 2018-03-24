@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -7,76 +7,54 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.game.Player;
+import com.mygdx.game.TileMap;
 
 public class GameScreen implements Screen {
 
 	public static int VIEWPORT_WIDTH = 800;
 	public static int VIEWPORT_HEIGHT = 480;
-	public static int MAP_HEIGHT;
-	public static int MAP_WIDTH;
-	public static int MAP_PIXEL_WIDTH;
-	public static int MAP_PIXEL_HEIGHT;
-	public static int TILE_PIXEL_WIDTH;
-	public static int TILE_PIXEL_HEIGHT;
-
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private OrthogonalTiledMapRenderer mapRendere;
+	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private AssetManager assetManager;
-	private Stage stage;
-
-	private TiledMap map;
+	private TileMap map;
 	private Player player;
 
 	@Override
 	public void show() {
 
 		this.assetManager = new AssetManager();
-		assetManager.load("skin/neutralizer-ui.atlas", TextureAtlas.class);
 		assetManager.load("img/player.png", Texture.class);
-		assetManager.load("fonts/blackFont.fnt", BitmapFont.class);
 		assetManager.finishLoading();
 
 		this.batch = new SpriteBatch();
 
 		this.camera = new OrthographicCamera();
 		camera.setToOrtho(false, GameScreen.VIEWPORT_WIDTH, GameScreen.VIEWPORT_HEIGHT);
+		System.out.println(camera.viewportHeight);
+		System.out.println(camera.viewportWidth);
 
-		this.map = new TmxMapLoader().load("maps/map.tmx");
-
-		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
-		MAP_HEIGHT = layer.getHeight();
-		MAP_WIDTH = layer.getWidth();
-		MAP_PIXEL_HEIGHT = (int) (layer.getTileWidth() * layer.getWidth());
-		MAP_PIXEL_WIDTH = (int) (layer.getTileHeight() * layer.getHeight());
-		TILE_PIXEL_HEIGHT = (int) layer.getTileHeight();
-		TILE_PIXEL_WIDTH = (int) layer.getTileWidth();
-
-		this.mapRendere = new OrthogonalTiledMapRenderer(map);
+		this.map = new TileMap();
+		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(map.getMap());
 
 		this.player = new Player(new Sprite(assetManager.get("img/player.png", Texture.class)),
-				(TiledMapTileLayer) map.getLayers().get(1));
+				(TiledMapTileLayer) map.getMap().getLayers().get("Kachelebene 2"));
 
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(multiplexer);
 		multiplexer.addProcessor(player);
-		multiplexer.addProcessor(stage);
 
 	}
 
 	@Override
 	public void dispose() {
-		map.dispose();
 		assetManager.dispose();
+		batch.dispose();
 
 	}
 
@@ -98,6 +76,7 @@ public class GameScreen implements Screen {
 		camera.position.x = player.getX();
 		camera.position.y = player.getY();
 		// camera.translate(player.getX(), player.getY(), 0);
+
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
@@ -106,8 +85,8 @@ public class GameScreen implements Screen {
 
 		// render()
 
-		mapRendere.setView(camera);
-		mapRendere.render();
+		tiledMapRenderer.setView(camera);
+		tiledMapRenderer.render();
 
 		batch.begin();
 		player.draw(batch, 1);

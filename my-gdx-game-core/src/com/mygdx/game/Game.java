@@ -2,17 +2,14 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 
+import screen.MainMenuScreen;
+
 public class Game extends com.badlogic.gdx.Game {
 
 	public final static String TITEL = "Unknown";
-	public static int V_WIDTH;
-	public static int V_HEIGHT;
-	
 
 	@Override
 	public void create() {
-		Game.V_HEIGHT = Gdx.graphics.getWidth();
-		Game.V_HEIGHT = Gdx.graphics.getHeight();
 		setScreen(new MainMenuScreen());
 		Gdx.app.log(TITEL, "create()");
 	}
