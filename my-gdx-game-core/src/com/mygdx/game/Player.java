@@ -81,8 +81,10 @@ public class Player extends Sprite implements InputProcessor {
 					&& !(collisionWithTile(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
 
 				setX(getX() + velocity.x);
-				hitBox.setX(getX());
 
+			}
+			else {
+				velocity.x = 0;
 			}
 
 		} else if (velocity.x < 0) { // Moving left
@@ -92,8 +94,10 @@ public class Player extends Sprite implements InputProcessor {
 					&& !(collisionWithTile(tempX, (int) (getY() + hitBox.getHeight()) / 32))) {
 
 				setX(getX() + velocity.x);
-				hitBox.setX(getX());
 
+			}
+			else {
+				velocity.x = 0;
 			}
 
 		}
@@ -109,8 +113,10 @@ public class Player extends Sprite implements InputProcessor {
 					&& !(collisionWithTile((int) ((getX() + hitBox.width) / 32), tempY))) {
 
 				setY(getY() + velocity.y);
-				hitBox.setY(getY());
 
+			}
+			else {
+				velocity.y = 0;
 			}
 
 		} else if (velocity.y > 0) { // Moving down
@@ -120,8 +126,9 @@ public class Player extends Sprite implements InputProcessor {
 					&& !(collisionWithTile((int) (getX() + hitBox.width) / 32, tempY))) {
 
 				setY(getY() + velocity.y);
-				hitBox.setY(getY());
 
+			}else {
+				velocity.y = 0;
 			}
 
 		}
@@ -150,6 +157,7 @@ public class Player extends Sprite implements InputProcessor {
 
 		if (y >= 0 && y <= TileMap.MAP_PIXEL_HEIGHT - hitBox.height) {
 			super.setY(y);
+			hitBox.setY(y);
 		} else {
 			return;
 		}
@@ -160,6 +168,7 @@ public class Player extends Sprite implements InputProcessor {
 	public void setX(float x) {
 		if (x >= 0 && x <= TileMap.MAP_PIXEL_WIDTH - hitBox.width) {
 			super.setX(x);
+			hitBox.setX(x);
 		} else {
 			return;
 		}
