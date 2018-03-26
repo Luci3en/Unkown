@@ -1,7 +1,5 @@
 package screen;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -10,6 +8,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -20,8 +21,8 @@ import com.mygdx.game.TileMap;
 
 public class GameScreen implements Screen {
 
-	public static int VIEWPORT_WIDTH = 800;
-	public static int VIEWPORT_HEIGHT = 800;
+	public static int VIEWPORT_WIDTH = 600;
+	public static int VIEWPORT_HEIGHT = 400;
 	private OrthographicCamera camera;
 	private SpriteBatch spriteBatch;
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
@@ -33,7 +34,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 
-		this.assetManager = new AssetManager();
+		this.assetManager = new AssetManager(); 
 		assetManager.load("img/player.png", Texture.class);
 		assetManager.finishLoading();
 
@@ -53,6 +54,12 @@ public class GameScreen implements Screen {
 		Gdx.input.setInputProcessor(player);
 		// InputMultiplexer multiplexer = new InputMultiplexer();
 		// multiplexer.addProcessor(player);
+		
+		
+		
+		
+	
+		
 
 	}
 
@@ -88,31 +95,13 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		camera.position.x = player.getX();
+		camera.position.y = player.getY();
+
 		camera.position.x = MathUtils.clamp(camera.position.x, camera.viewportWidth / 2,
 				TileMap.MAP_PIXEL_WIDTH - (camera.viewportWidth / 2));
 		camera.position.y = MathUtils.clamp(camera.position.y, camera.viewportHeight / 2,
 				TileMap.MAP_PIXEL_HEIGHT - (camera.viewportHeight / 2));
-
-//		if (player.getX() < camera.viewportWidth / 2) {
-//			camera.position.x = camera.viewportWidth / 2;
-//		} else if (player.getX() > TileMap.MAP_PIXEL_WIDTH - (camera.viewportWidth / 2)) {
-//			camera.position.x = TileMap.TILE_PIXEL_WIDTH - (camera.viewportWidth / 2);
-//		} else {
-//
-//			System.out.println("moveX");
-//
-//			camera.position.x = player.getX();
-//		}
-//
-//		if (player.getY() < camera.viewportHeight / 2) {
-//			camera.position.y = camera.viewportHeight / 2;
-//		} else if (player.getY() > TileMap.MAP_PIXEL_HEIGHT - (camera.viewportHeight / 2)) {
-//			camera.position.y = TileMap.TILE_PIXEL_HEIGHT - (camera.viewportHeight / 2);
-//		} else {
-//
-//			System.out.println("move y");
-//			camera.position.y = player.getY();
-//		}
 
 		camera.update();
 
@@ -120,7 +109,7 @@ public class GameScreen implements Screen {
 
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
-
+	
 		spriteBatch.setProjectionMatrix(camera.combined);
 		spriteBatch.begin();
 		player.draw(spriteBatch);

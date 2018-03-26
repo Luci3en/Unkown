@@ -11,32 +11,36 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
 public class TileMap {
 
-	public static int MAP_HEIGHT;
 	public static int MAP_WIDTH;
-	public static int MAP_PIXEL_HEIGHT;
+	public static int MAP_HEIGHT;
 	public static int MAP_PIXEL_WIDTH;
-	public static int TILE_PIXEL_HEIGHT;
+	public static int MAP_PIXEL_HEIGHT;
 	public static int TILE_PIXEL_WIDTH;
+	public static int TILE_PIXEL_HEIGHT;
 
 	private TiledMap map;
 
 	public TileMap() {
 		map = new TmxMapLoader().load("maps/map.tmx");
-
+		
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("Kachelebene 3");
-		MAP_HEIGHT = layer.getHeight();
+
 		MAP_WIDTH = layer.getWidth();
-		MAP_PIXEL_HEIGHT = (int) (layer.getTileWidth() * layer.getWidth());
-		MAP_PIXEL_WIDTH = (int) (layer.getTileHeight() * layer.getHeight());
-		TILE_PIXEL_HEIGHT = (int) layer.getTileHeight();
+		MAP_HEIGHT = layer.getHeight();
+		MAP_PIXEL_WIDTH = (int) layer.getTileWidth() * layer.getWidth();
+		MAP_PIXEL_HEIGHT = (int) layer.getTileHeight() * layer.getHeight();
 		TILE_PIXEL_WIDTH = (int) layer.getTileWidth();
+		TILE_PIXEL_HEIGHT = (int) layer.getTileHeight();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 1; i < 3; i++) {
 
-			for (int j = 0; j < MAP_WIDTH; j++) {
+			for (int j = 1; j < 3; j++) {
 				Cell cell = new Cell();
-				cell.setTile(
-						new StaticTiledMapTile(new TextureRegion(new Texture(Gdx.files.internal("img/Tile.png")))));
+//				cell.setTile(
+//						new StaticTiledMapTile(new TextureRegion(new Texture(Gdx.files.internal("img/Tile.png")))));
+				
+				
+			
 				layer.setCell(i, j, cell);
 			}
 		}

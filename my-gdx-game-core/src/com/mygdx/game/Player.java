@@ -67,8 +67,8 @@ public class Player extends Sprite implements InputProcessor {
 
 	public void move() {
 
-		moveY();
 		moveX();
+		moveY();
 
 	}
 
@@ -82,8 +82,7 @@ public class Player extends Sprite implements InputProcessor {
 
 				setX(getX() + velocity.x);
 
-			}
-			else {
+			} else {
 				velocity.x = 0;
 			}
 
@@ -95,8 +94,7 @@ public class Player extends Sprite implements InputProcessor {
 
 				setX(getX() + velocity.x);
 
-			}
-			else {
+			} else {
 				velocity.x = 0;
 			}
 
@@ -114,8 +112,7 @@ public class Player extends Sprite implements InputProcessor {
 
 				setY(getY() + velocity.y);
 
-			}
-			else {
+			} else {
 				velocity.y = 0;
 			}
 
@@ -127,7 +124,7 @@ public class Player extends Sprite implements InputProcessor {
 
 				setY(getY() + velocity.y);
 
-			}else {
+			} else {
 				velocity.y = 0;
 			}
 
@@ -137,29 +134,14 @@ public class Player extends Sprite implements InputProcessor {
 
 	public boolean collisionWithTile(int x, int y) {
 
-		if (x <= TileMap.MAP_WIDTH && y <= TileMap.MAP_HEIGHT && x >= 0 && y >= 0) {
-			Cell cell = collisionLayer.getCell(x, y);
+		Cell cell = collisionLayer.getCell(x, y);
 
-			if (cell != null) {
-				return (Boolean) cell.getTile().getProperties().get("blocked");
-
-			}
+		if (cell != null) {
+			return (Boolean) cell.getTile().getProperties().get("blocked");
 
 		} else {
-			return true;
-		}
-		return false;
 
-	}
-
-	@Override
-	public void setY(float y) {
-
-		if (y >= 0 && y <= TileMap.MAP_PIXEL_HEIGHT - hitBox.height) {
-			super.setY(y);
-			hitBox.setY(y);
-		} else {
-			return;
+			return false;
 		}
 
 	}
@@ -169,6 +151,18 @@ public class Player extends Sprite implements InputProcessor {
 		if (x >= 0 && x <= TileMap.MAP_PIXEL_WIDTH - hitBox.width) {
 			super.setX(x);
 			hitBox.setX(x);
+		} else {
+			return;
+		}
+
+	}
+
+	@Override
+	public void setY(float y) {
+
+		if (y >= 0 && y <= TileMap.MAP_PIXEL_HEIGHT - hitBox.height) {
+			super.setY(y);
+			hitBox.setY(y);
 		} else {
 			return;
 		}
