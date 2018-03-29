@@ -8,13 +8,11 @@ import game.screens.MainMenuScreen;
 public class Game extends com.badlogic.gdx.Game {
 
 	public final static String TITEL = "Unknown";
-	private AssetManager assetManager;
 
 	@Override
 	public void create() {
 		Gdx.app.log(TITEL, "create()");
-		this.assetManager = new AssetManager();
-		super.setScreen(new MainMenuScreen(assetManager));
+		super.setScreen(new MainMenuScreen(new AssetManager()));
 
 	}
 

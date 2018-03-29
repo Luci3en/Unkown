@@ -3,14 +3,19 @@ package game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import game.Player;
 import game.World;
@@ -24,6 +29,7 @@ public class GameScreen extends AbstractScreen {
 
 	public GameScreen(AssetManager assetManager) {
 		super(assetManager, 600f, 400f);
+		this.buildStage();
 
 		assetManager.load("fonts/blackFont.fnt", BitmapFont.class);
 		assetManager.load("img/player.png", Texture.class);
@@ -49,7 +55,8 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void render(float delta) {
-		super.render(delta);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		getCamera().position.x = player.getX();
 
@@ -64,6 +71,13 @@ public class GameScreen extends AbstractScreen {
 		getCamera().update();
 		// render()
 
+		System.out.println(getActors().size);
+
+		Label label = (Label) getActors().get(0);
+		label.setX(getCamera().position.x);
+		label.setY(getCamera().position.y);
+		label.setText("Fps: " + Gdx.graphics.getFramesPerSecond());
+
 		tiledMapRenderer.setView((OrthographicCamera) getCamera());
 		tiledMapRenderer.render();
 
@@ -74,11 +88,26 @@ public class GameScreen extends AbstractScreen {
 
 		spriteBatch.end();
 
+		act();
+		draw();
 	}
 
 	@Override
 	public void buildStage() {
-		// TODO Auto-generated method stub
+
+		BitmapFont blackFont = new BitmapFont(Gdx.files.internal("fonts/blackFont.fnt"));
+
+		LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = blackFont;
+		Label header = new Label("Fps: ", labelStyle);
+		header.setFontScale(2f);
+		addActor(header);
+
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
 	}
 
 }
