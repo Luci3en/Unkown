@@ -1,12 +1,10 @@
-package screen;
+package game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -14,29 +12,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.Game;
 
-public class MainMenuScreen implements Screen {
+import game.Game;
 
-	private Stage stage;
-	private TextureAtlas atlas;
-	private Skin skin;
-	private Label header;
-	private TextButton exit, play, settings;
-	private BitmapFont blackFont;
+public class MainMenuScreen extends AbstractScreen {
+
+	public MainMenuScreen(AssetManager assetManager) {
+		super(assetManager, 800f, 800f);
+		this.buildStage();
+	}
 
 	@Override
-	public void show() {
+	public void buildStage() {
 
-		stage = new Stage();
-		Gdx.input.setInputProcessor(stage);
-		blackFont = new BitmapFont(Gdx.files.internal("fonts/blackFont.fnt"));
-		atlas = new TextureAtlas(Gdx.files.internal("skin/neutralizer-ui.atlas"));
-		skin = new Skin(atlas);
+		BitmapFont blackFont = new BitmapFont(Gdx.files.internal("fonts/blackFont.fnt"));
+		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("skin/neutralizer-ui.atlas"));
+		Skin skin = new Skin(atlas);
 
 		LabelStyle labelStyle = new LabelStyle();
 		labelStyle.font = blackFont;
-		header = new Label("Unkown", labelStyle);
+		Label header = new Label("Unkown", labelStyle);
 		header.setFontScale(2f);
 
 		TextButtonStyle textButtonStyle = new TextButtonStyle();
@@ -52,38 +47,38 @@ public class MainMenuScreen implements Screen {
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = blackFont;
 
-		exit = new TextButton("Exit", textButtonStyle);
+		TextButton exit = new TextButton("Exit", textButtonStyle);
 
 		exit.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				System.exit(0);
+				Gdx.app.exit();
 
 			}
 
 		});
 
-		play = new TextButton("Play", textButtonStyle);
+		TextButton play = new TextButton("Play", textButtonStyle);
 		play.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(getAssetManager()));
 
 			}
 
 		});
 
-		settings = new TextButton("Settings", textButtonStyle);
+		TextButton settings = new TextButton("Settings", textButtonStyle);
 		settings.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				((Game) Gdx.app.getApplicationListener()).setScreen(new SettingsScreen());
+				((Game) Gdx.app.getApplicationListener()).setScreen(new SettingsScreen(getAssetManager()));
 
 			}
 
@@ -100,50 +95,8 @@ public class MainMenuScreen implements Screen {
 		table.add(settings).padBottom(30);
 		table.row();
 		table.add(exit);
-		stage.addActor(table);
+		addActor(table);
 
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0.1f, 0.3f, 0.4f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		stage.act(Gdx.graphics.getDeltaTime());
-		stage.draw();
-
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		stage.getViewport().update(width, height);
-
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void dispose() {
-		stage.dispose();
-		blackFont.dispose();
-		atlas.dispose();
-		skin.dispose();
 	}
 
 }

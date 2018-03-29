@@ -1,50 +1,54 @@
-package com.mygdx.game;
+package game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 
-import screen.MainMenuScreen;
+import game.screens.MainMenuScreen;
 
 public class Game extends com.badlogic.gdx.Game {
 
 	public final static String TITEL = "Unknown";
+	private AssetManager assetManager;
 
 	@Override
 	public void create() {
-		setScreen(new MainMenuScreen());
 		Gdx.app.log(TITEL, "create()");
+		this.assetManager = new AssetManager();
+		super.setScreen(new MainMenuScreen(assetManager));
+
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		super.resize(width, height);
-		Gdx.app.log(TITEL, "resize()");
+		Gdx.app.log(TITEL, "resize(" + width + ", " + height + ")");
+		super.getScreen().resize(width, height);
 
 	}
 
 	@Override
 	public void render() {
-		super.render();
+		super.getScreen().render(Gdx.graphics.getDeltaTime());
 
 	}
 
 	@Override
 	public void pause() {
-		super.pause();
 		Gdx.app.log(TITEL, "pause()");
+		super.getScreen().pause();
 
 	}
 
 	@Override
 	public void resume() {
-		super.resume();
 		Gdx.app.log(TITEL, "resume()");
+		super.getScreen().resume();
 
 	}
 
 	@Override
 	public void dispose() {
-		super.dispose();
 		Gdx.app.log(TITEL, "dispose()");
+		super.getScreen().dispose();
 
 	}
 

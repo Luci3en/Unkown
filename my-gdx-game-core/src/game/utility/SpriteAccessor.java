@@ -1,4 +1,4 @@
-package utility;
+package game.utility;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 

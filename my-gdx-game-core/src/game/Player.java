@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -67,13 +67,6 @@ public class Player extends Sprite implements InputProcessor {
 
 	public void move() {
 
-		moveX();
-		moveY();
-
-	}
-
-	public void moveX() {
-
 		if (velocity.x > 0) { // Moving right
 			int tempX = (int) (getX() + velocity.x + hitBox.width) / 32;
 
@@ -99,10 +92,6 @@ public class Player extends Sprite implements InputProcessor {
 			}
 
 		}
-
-	}
-
-	public void moveY() {
 
 		if (velocity.y < 0) { // Moving up
 			int tempY = (int) (getY() + velocity.y) / 32;
@@ -148,7 +137,7 @@ public class Player extends Sprite implements InputProcessor {
 
 	@Override
 	public void setX(float x) {
-		if (x >= 0 && x <= TileMap.MAP_PIXEL_WIDTH - hitBox.width) {
+		if (x >= 0 && x <= World.MAP_PIXEL_WIDTH - hitBox.width) {
 			super.setX(x);
 			hitBox.setX(x);
 		} else {
@@ -160,7 +149,7 @@ public class Player extends Sprite implements InputProcessor {
 	@Override
 	public void setY(float y) {
 
-		if (y >= 0 && y <= TileMap.MAP_PIXEL_HEIGHT - hitBox.height) {
+		if (y >= 0 && y <= World.MAP_PIXEL_HEIGHT - hitBox.height) {
 			super.setY(y);
 			hitBox.setY(y);
 		} else {
