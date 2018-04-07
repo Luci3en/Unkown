@@ -1,4 +1,4 @@
-package game.screens;
+package game.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -53,7 +53,7 @@ public class SettingsScreen extends AbstractScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(getAssetManager()));
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(getAssetManager()));
 
 			}
 

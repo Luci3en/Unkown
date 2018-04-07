@@ -1,4 +1,4 @@
-package game.screens;
+package game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -38,7 +38,7 @@ public class SplashScreen extends AbstractScreen {
 
 					@Override
 					public void onEvent(int arg0, BaseTween<?> arg1) {
-						((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(getAssetManager()));
+						((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen(getAssetManager()));
 
 					}
 				});

@@ -1,4 +1,4 @@
-package game;
+package game.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,12 +36,12 @@ public class World {
 
 		items = new Item[World.MAP_WIDTH][World.MAP_HEIGHT];
 
-		for (int i = 15; i < World.MAP_WIDTH; i++) {
-
-			for (int j = 15; j < World.MAP_HEIGHT; j++) {
-				items[i][j] = new Item(new Texture(Gdx.files.internal("img/Tile.png")), i*32, j*32);
-			}
-		}
+//		for (int i = 15; i < World.MAP_WIDTH; i++) {
+//
+//			for (int j = 15; j < World.MAP_HEIGHT; j++) {
+//				items[i][j] = new Item(new Texture(Gdx.files.internal("img/Tile.png")), i*32, j*32);
+//			}
+//		}
 
 	}
 
