@@ -3,17 +3,12 @@ package game.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class SettingsScreen extends AbstractScreen {
@@ -26,28 +21,10 @@ public class SettingsScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 
-		BitmapFont blackFont = new BitmapFont(Gdx.files.internal("fonts/blackFont.fnt"));
-		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("skin/neutralizer-ui.atlas"));
-		Skin skin = new Skin(atlas);
-
-		LabelStyle labelStyle = new LabelStyle();
-		labelStyle.font = blackFont;
-		Label header = new Label("Settings", labelStyle);
+		Label header = new Label("Settings", getAssetManager().get("skin/metal-ui.json", Skin.class));
 		header.setFontScale(1.5f);
 
-		TextButtonStyle textButtonStyle = new TextButtonStyle();
-		textButtonStyle.up = skin.getDrawable("menu-button");
-		textButtonStyle.down = skin.getDrawable("menu-button-down");
-		textButtonStyle.over = skin.getDrawable("menu-button-over");
-		textButtonStyle.up.setMinWidth(200);
-		textButtonStyle.down.setMinWidth(200);
-		textButtonStyle.over.setMinWidth(200);
-
-		textButtonStyle.pressedOffsetX = 1;
-		textButtonStyle.pressedOffsetY = -1;
-		textButtonStyle.font = blackFont;
-
-		TextButton back = new TextButton("Back", textButtonStyle);
+		TextButton back = new TextButton("Back", getAssetManager().get("skin/metal-ui.json", Skin.class));
 		back.addListener(new ClickListener() {
 
 			@Override
@@ -59,12 +36,7 @@ public class SettingsScreen extends AbstractScreen {
 
 		});
 
-		CheckBoxStyle checkBoxStyle = new CheckBoxStyle();
-		checkBoxStyle.font = blackFont;
-		checkBoxStyle.up = skin.getDrawable("checkbox");
-		checkBoxStyle.checked = skin.getDrawable("checkbox-checked");
-
-		CheckBox fullscreen = new CheckBox("        ", checkBoxStyle);
+		CheckBox fullscreen = new CheckBox("        ", getAssetManager().get("skin/metal-ui.json", Skin.class));
 		fullscreen.addListener(new ClickListener() {
 
 			@Override

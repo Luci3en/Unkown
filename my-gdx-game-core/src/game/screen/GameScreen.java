@@ -1,46 +1,36 @@
 package game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import game.entity.Player;
+import game.entity.Tile;
 import game.entity.World;
 
 public class GameScreen extends AbstractScreen {
 
 	private SpriteBatch spriteBatch;
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
-	private World map;
-	private Player player;
+	private World world;
 	private ShapeRenderer shapeRenderer;
 
 	public GameScreen(AssetManager assetManager) {
 		super(assetManager, 600f, 400f);
-		this.buildStage();
-
-		assetManager.load("fonts/blackFont.fnt", BitmapFont.class);
-		assetManager.finishLoading();
-
 		this.shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setAutoShapeType(true);
-
 		this.spriteBatch = new SpriteBatch();
-
-		this.map = new World();
-		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(map.getMap());
-
-		this.player = new Player((TiledMapTileLayer) map.getMap().getLayers().get("Kachelebene 2"));
+		this.world = new World(20, 20);
+		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(world.getMap());
 
 	}
 
@@ -48,7 +38,7 @@ public class GameScreen extends AbstractScreen {
 	public void show() {
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(this);
-		inputMultiplexer.addProcessor(player);
+		inputMultiplexer.addProcessor(world.getPlayer());
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
@@ -59,54 +49,69 @@ public class GameScreen extends AbstractScreen {
 
 		updateCamera();
 
-		// render()
-
-		Label label = (Label) getActors().get(0);
-		label.setX(getCamera().position.x - getViewport().getWorldWidth());
-		label.setY(getCamera().position.y - getViewport().getWorldHeight());
-		label.setText("Fps: " + Gdx.graphics.getFramesPerSecond());
-
 		tiledMapRenderer.setView((OrthographicCamera) getCamera());
 		tiledMapRenderer.render();
 
 		spriteBatch.setProjectionMatrix(getCamera().combined);
 		spriteBatch.begin();
-		map.renderItems(spriteBatch);
-		player.draw(spriteBatch);
+
+		world.render(spriteBatch);
 
 		spriteBatch.end();
-
+		
 		shapeRenderer.setProjectionMatrix(getCamera().combined);
 		shapeRenderer.begin();
-		shapeRenderer.rect(player.getHitBox().getX(), player.getHitBox().getY(), player.getHitBox().getWidth(),
-				player.getHitBox().getHeight());
+
+		for (Tile iterable_element : world.getEntityManager().getListe()) {
+			
+			shapeRenderer.rect(iterable_element.getX() * 32, iterable_element.getY() * 32, 32, 32);
+			
+		}
+
 		shapeRenderer.end();
-		
-		act();
-		draw();
+
+		super.act(delta);
+		super.draw();
+
 	}
 
 	@Override
 	public void buildStage() {
 
-		BitmapFont blackFont = new BitmapFont(Gdx.files.internal("fonts/blackFont.fnt"));
+	}
 
-		LabelStyle labelStyle = new LabelStyle();
-		labelStyle.font = blackFont;
-		Label header = new Label("Fps: ", labelStyle);
-		header.setFontScale(2f);
-		addActor(header);
+	public Dialog getExitDialog() {
 
+		return new Dialog("Exit", getAssetManager().get("skin/metal-ui.json", Skin.class)) {
+			{
+				setName("exit");
+				button("Yes", "Yes");
+				button("No", "No");
+
+			}
+
+			@Override
+			protected void result(Object object) {
+
+				if (object.equals("Yes")) {
+
+					Gdx.app.exit();
+
+				}
+
+			}
+
+		}.show(this);
 	}
 
 	public void updateCamera() {
 
-		getCamera().position.x = player.getX();
+		getCamera().position.x = world.getPlayer().getX();
 
 		getCamera().position.x = MathUtils.clamp(getCamera().position.x, getCamera().viewportWidth / 2,
 				World.MAP_PIXEL_WIDTH - (getCamera().viewportWidth / 2));
 
-		getCamera().position.y = player.getY();
+		getCamera().position.y = world.getPlayer().getY();
 
 		getCamera().position.y = MathUtils.clamp(getCamera().position.y, getCamera().viewportHeight / 2,
 				World.MAP_PIXEL_HEIGHT - (getCamera().viewportHeight / 2));
@@ -118,6 +123,36 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void dispose() {
 		super.dispose();
+		spriteBatch.dispose();
+		tiledMapRenderer.dispose();
+	}
+
+	@Override
+	public boolean keyDown(int keyCode) {
+
+		if (keyCode == Keys.ESCAPE) {
+
+			int temp = 0;
+
+			if (getActors().size > 0) {
+
+				for (Actor iterable_element : getActors()) {
+
+					if (iterable_element.getName().equals("exit")) {
+						temp++;
+					} else {
+
+					}
+
+				}
+			}
+			if (temp == 0) {
+				getExitDialog();
+			}
+
+		}
+
+		return false;
 	}
 
 }

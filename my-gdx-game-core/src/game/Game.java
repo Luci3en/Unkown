@@ -3,9 +3,7 @@ package game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 
-import game.screen.GameScreen;
 import game.screen.MenuScreen;
-import game.screen.SplashScreen;
 
 public class Game extends com.badlogic.gdx.Game {
 
@@ -14,7 +12,7 @@ public class Game extends com.badlogic.gdx.Game {
 	@Override
 	public void create() {
 		Gdx.app.log(TITEL, "create()");
-		super.setScreen(new GameScreen(new AssetManager()));
+		super.setScreen(new MenuScreen(new AssetManager()));
 
 	}
 

@@ -7,29 +7,26 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Entity implements InputProcessor {
 
 	private Vector2 velocity;
-	private TiledMapTileLayer collisionLayer;
-	private float speed = 120;
+	private float speed = 100;
 	private boolean pressed_up, pressed_down, pressed_left, pressed_right;
 	private Rectangle hitBox;
 	private Animation<TextureRegion> animation, up_walking, down_walking, left_walking, right_walking;
 	private float stateTime;
 
-	public Player(TiledMapTileLayer tiledMapTileLayer) {
-		this.collisionLayer = tiledMapTileLayer;
+	public Player() {
 		this.velocity = new Vector2();
 		this.pressed_up = false;
 		this.pressed_down = false;
 		this.pressed_left = false;
 		this.pressed_right = false;
-		this.hitBox = new Rectangle(getX() + (32 / 2) - 16 / 2, getY(), 16, 32);
+		this.hitBox = new Rectangle(getX() + 8, getY(), 16, 32);
+
 		this.stateTime = 0;
 
 		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("img/player_walking.atlas"));
@@ -46,9 +43,27 @@ public class Player extends Entity implements InputProcessor {
 		animation = new Animation<TextureRegion>(1f / 10f, textureAtlas.findRegions("right_walking"));
 		right_walking = animation;
 
+		// Texture texture = new Texture(Gdx.files.internal("img/Alina 2.0
+		// bewegt.png"));
+		// TextureRegion[][] textureRegion = TextureRegion.split(texture, 32, 32);
+		//
+		// TextureRegion[] walkFrames = new TextureRegion[5 * 1];
+		//
+		// int index = 0;
+		// for (int i = 3; i < 4; i++) {
+		// for (int j = 0; j < 5; j++) {
+		// walkFrames[index++] = textureRegion[i][j];
+		// }
+		// }
+		//
+		//
+		// animation = new Animation<TextureRegion>(1f / 10f, walkFrames);
+		// left_walking = animation;
+
 	}
 
-	public void draw(Batch batch) {
+	public void render(Batch batch) {
+
 		stateTime += Gdx.graphics.getDeltaTime();
 		update(Gdx.graphics.getDeltaTime());
 
@@ -73,7 +88,6 @@ public class Player extends Entity implements InputProcessor {
 
 		if (pressed_left) {
 			velocity.x = -speed * delta;
-
 		}
 
 		if (pressed_right) {
@@ -98,83 +112,41 @@ public class Player extends Entity implements InputProcessor {
 	public boolean move() {
 
 		if (velocity.x > 0) { // Moving right
-			int tempX = (int) (hitBox.x + velocity.x + hitBox.width) / 32;
+
 			animation = right_walking;
 
-			if (!(collisionWithTile(tempX, ((int) hitBox.y / 32)))
-					&& !(collisionWithTile(tempX, (int) (hitBox.y + hitBox.getHeight()) / 32))) {
-
-				setX(getX() + velocity.x);
-				return true;
-
-			} else {
-				velocity.x = 0;
-				return false;
-			}
+			setX(getX() + velocity.x);
+			return true;
 
 		} else if (velocity.x < 0) { // Moving left
-			int tempX = (int) (hitBox.x + velocity.x) / 32;
+
 			animation = left_walking;
 
-			if (!(collisionWithTile(tempX, ((int) hitBox.y / 32)))
-					&& !(collisionWithTile(tempX, (int) (hitBox.y + hitBox.getHeight()) / 32))) {
+			setX(getX() + velocity.x);
 
-				setX(getX() + velocity.x);
-
-				return true;
-
-			} else {
-				velocity.x = 0;
-				return false;
-			}
+			return true;
 
 		}
 
-		if (velocity.y < 0) { // Moving down
-			int tempY = (int) (hitBox.y + velocity.y) / 32;
+		else if (velocity.y < 0) { // Moving down
+
 			animation = down_walking;
 
-			if (!(collisionWithTile(((int) hitBox.x / 32), tempY))
-					&& !(collisionWithTile((int) ((hitBox.x + hitBox.width) / 32), tempY))) {
+			setY(getY() + velocity.y);
 
-				setY(getY() + velocity.y);
-
-				return true;
-
-			} else {
-				velocity.y = 0;
-				return false;
-
-			}
-
-		} else if (velocity.y > 0) { // Moving up
-			int tempY = (int) (hitBox.y + velocity.y + hitBox.height) / 32;
-			animation = up_walking;
-
-			if (!(collisionWithTile((int) hitBox.x / 32, tempY))
-					&& !(collisionWithTile((int) (hitBox.x + hitBox.width) / 32, tempY))) {
-
-				setY(getY() + velocity.y);
-
-				return true;
-			} else {
-				velocity.y = 0;
-				return false;
-			}
+			return true;
 
 		}
-		return false;
 
-	}
+		else if (velocity.y > 0) { // Moving up
 
-	public boolean collisionWithTile(int x, int y) {
-		Cell cell = collisionLayer.getCell(x, y);
+			animation = up_walking;
 
-		if (cell != null) {
-			return (Boolean) cell.getTile().getProperties().get("blocked");
+			setY(getY() + velocity.y);
+
+			return true;
 
 		} else {
-
 			return false;
 		}
 
