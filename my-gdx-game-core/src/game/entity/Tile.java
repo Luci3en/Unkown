@@ -9,6 +9,7 @@ public class Tile extends StaticTiledMapTile {
 	public static int TILE_PIXEL_HEIGHT = 32;
 	private int x;
 	private int y;
+	private int entityId;
 
 	public Tile(TextureRegion textureRegion) {
 		super(textureRegion);
@@ -20,10 +21,6 @@ public class Tile extends StaticTiledMapTile {
 		this.x = x;
 		this.y = y;
 	}
-
-	
-
-
 
 	public int getX() {
 		return x;
@@ -39,6 +36,14 @@ public class Tile extends StaticTiledMapTile {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public int getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(int entityId) {
+		this.entityId = entityId;
 	}
 
 }

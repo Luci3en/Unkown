@@ -36,7 +36,11 @@ public class SettingsScreen extends AbstractScreen {
 
 		});
 
-		CheckBox fullscreen = new CheckBox("        ", getAssetManager().get("skin/metal-ui.json", Skin.class));
+		
+		
+		
+		
+		CheckBox fullscreen = new CheckBox(" Fullscreen", getAssetManager().get("skin/metal-ui.json", Skin.class));
 		fullscreen.addListener(new ClickListener() {
 
 			@Override

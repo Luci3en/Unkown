@@ -25,6 +25,7 @@ public class MenuScreen extends AbstractScreen {
 		getAssetManager().finishLoading();
 
 		Label header = new Label("Unkown", getAssetManager().get("skin/metal-ui.json", Skin.class));
+		header.setColor(1, 1, 1, 1);
 		header.setFontScale(2f);
 
 		TextButton exit = new TextButton("Exit", getAssetManager().get("skin/metal-ui.json", Skin.class));
@@ -47,6 +48,10 @@ public class MenuScreen extends AbstractScreen {
 			public void clicked(InputEvent event, float x, float y) {
 
 				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(getAssetManager()));
+		
+				// welcher screen genau wird disposed;
+				//dispose();
+		
 
 			}
 

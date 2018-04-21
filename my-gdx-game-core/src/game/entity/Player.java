@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,20 +12,18 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Entity implements InputProcessor {
 
-	private Vector2 velocity;
-	private float speed = 100;
 	private boolean pressed_up, pressed_down, pressed_left, pressed_right;
-	private Rectangle hitBox;
 	private Animation<TextureRegion> animation, up_walking, down_walking, left_walking, right_walking;
 	private float stateTime;
 
-	public Player() {
-		this.velocity = new Vector2();
+	public Player(float x, float y) {
+		super(x, y);
+
 		this.pressed_up = false;
 		this.pressed_down = false;
 		this.pressed_left = false;
 		this.pressed_right = false;
-		this.hitBox = new Rectangle(getX() + 8, getY(), 16, 32);
+		super.setHitBox(new Rectangle(getX() + 8, getY(), 16, 20));
 
 		this.stateTime = 0;
 
@@ -62,133 +60,52 @@ public class Player extends Entity implements InputProcessor {
 
 	}
 
-	public void render(Batch batch) {
-
+	@Override
+	public void render(SpriteBatch spriteBatch) {
 		stateTime += Gdx.graphics.getDeltaTime();
 		update(Gdx.graphics.getDeltaTime());
 
 		if (animation != null) {
 			TextureRegion currentFrame = (TextureRegion) animation.getKeyFrame(stateTime, true);
 
-			if (move()) {
-				batch.draw(currentFrame, super.getX(), super.getY());
+			if (super.move()) {
+				spriteBatch.draw(currentFrame, super.getX(), super.getY());
 			} else {
 				TextureRegion[] currentFrames = animation.getKeyFrames();
-				batch.draw(currentFrames[0], super.getX(), super.getY());
+				spriteBatch.draw(currentFrames[0], super.getX(), super.getY());
 
 			}
 		}
-
 	}
 
 	public void update(float delta) {
+		
 
-		velocity.x = 0;
-		velocity.y = 0;
+		
+		super.getVelocity().x = 0;
+		super.getVelocity().y = 0;
 
 		if (pressed_left) {
-			velocity.x = -speed * delta;
+			super.getVelocity().x = -super.getSpeed() * delta;
 		}
 
 		if (pressed_right) {
-			velocity.x = speed * delta;
+			super.getVelocity().x = super.getSpeed() * delta;
 
 		}
 
 		if (pressed_up) {
-			velocity.y = speed * delta;
+			super.getVelocity().y = super.getSpeed() * delta;
 
 		}
 
 		if (pressed_down) {
-			velocity.y = -speed * delta;
+			super.getVelocity().y = -super.getSpeed() * delta;
 
 		}
 
 		move();
 
-	}
-
-	public boolean move() {
-
-		if (velocity.x > 0) { // Moving right
-
-			animation = right_walking;
-
-			setX(getX() + velocity.x);
-			return true;
-
-		} else if (velocity.x < 0) { // Moving left
-
-			animation = left_walking;
-
-			setX(getX() + velocity.x);
-
-			return true;
-
-		}
-
-		else if (velocity.y < 0) { // Moving down
-
-			animation = down_walking;
-
-			setY(getY() + velocity.y);
-
-			return true;
-
-		}
-
-		else if (velocity.y > 0) { // Moving up
-
-			animation = up_walking;
-
-			setY(getY() + velocity.y);
-
-			return true;
-
-		} else {
-			return false;
-		}
-
-	}
-
-	@Override
-	public void setX(float x) {
-		if (x >= 0 && x <= World.MAP_PIXEL_WIDTH - hitBox.width) {
-			super.setX(x);
-			hitBox.setX(x + (32 / 2) - 16 / 2);
-		} else {
-			return;
-		}
-
-	}
-
-	@Override
-	public void setY(float y) {
-
-		if (y >= 0 && y <= World.MAP_PIXEL_HEIGHT - hitBox.height) {
-			super.setY(y);
-			hitBox.setY(y);
-		} else {
-			return;
-		}
-
-	}
-
-	public Vector2 getVelocity() {
-		return velocity;
-	}
-
-	public void setVelocity(Vector2 velocity) {
-		this.velocity = velocity;
-	}
-
-	public float getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(float speed) {
-		this.speed = speed;
 	}
 
 	public boolean isPressed_up() {
@@ -221,14 +138,6 @@ public class Player extends Entity implements InputProcessor {
 
 	public void setPressed_right(boolean pressed_right) {
 		this.pressed_right = pressed_right;
-	}
-
-	public Rectangle getHitBox() {
-		return hitBox;
-	}
-
-	public void setHitBox(Rectangle hitBox) {
-		this.hitBox = hitBox;
 	}
 
 	public boolean isUp() {

@@ -1,5 +1,7 @@
 package game.screen;
 
+import java.util.Map.Entry;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import game.entity.Entity;
 import game.entity.Tile;
 import game.entity.World;
 
@@ -38,7 +41,7 @@ public class GameScreen extends AbstractScreen {
 	public void show() {
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(this);
-		inputMultiplexer.addProcessor(world.getPlayer());
+		inputMultiplexer.addProcessor(world.getEntityManager().getPlayer());
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
@@ -58,17 +61,8 @@ public class GameScreen extends AbstractScreen {
 		world.render(spriteBatch);
 
 		spriteBatch.end();
-		
-		shapeRenderer.setProjectionMatrix(getCamera().combined);
-		shapeRenderer.begin();
 
-		for (Tile iterable_element : world.getEntityManager().getListe()) {
-			
-			shapeRenderer.rect(iterable_element.getX() * 32, iterable_element.getY() * 32, 32, 32);
-			
-		}
-
-		shapeRenderer.end();
+		debugRender();
 
 		super.act(delta);
 		super.draw();
@@ -78,6 +72,26 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 
+	}
+
+	public void debugRender() {
+		shapeRenderer.setProjectionMatrix(getCamera().combined);
+		shapeRenderer.begin();
+
+		for (Tile iterable_element : world.getEntityManager().getListe()) {
+
+			shapeRenderer.rect(iterable_element.getX() * 32, iterable_element.getY() * 32, 32, 32);
+		}
+
+		for (Entry<Integer, Entity> iterable : world.getEntityManager().getEntities().entrySet()) {
+
+			iterable.getValue().debugHitbox(shapeRenderer);
+
+		}
+
+		world.getEntityManager().getPlayer().debugHitbox(shapeRenderer);
+
+		shapeRenderer.end();
 	}
 
 	public Dialog getExitDialog() {
@@ -106,12 +120,12 @@ public class GameScreen extends AbstractScreen {
 
 	public void updateCamera() {
 
-		getCamera().position.x = world.getPlayer().getX();
+		getCamera().position.x = world.getEntityManager().getPlayer().getX();
 
 		getCamera().position.x = MathUtils.clamp(getCamera().position.x, getCamera().viewportWidth / 2,
 				World.MAP_PIXEL_WIDTH - (getCamera().viewportWidth / 2));
 
-		getCamera().position.y = world.getPlayer().getY();
+		getCamera().position.y = world.getEntityManager().getPlayer().getY();
 
 		getCamera().position.y = MathUtils.clamp(getCamera().position.y, getCamera().viewportHeight / 2,
 				World.MAP_PIXEL_HEIGHT - (getCamera().viewportHeight / 2));

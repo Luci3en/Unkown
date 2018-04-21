@@ -17,14 +17,11 @@ public class World {
 
 	private TiledMap map;
 	private EntityManager entityManager;
-	private Player player;
 
 	public World(int map_width, int map_height) {
 
 		map = new TiledMap();
-		player = new Player();
 
-		
 		MAP_WIDTH = map_width;
 		MAP_HEIGHT = map_height;
 		MAP_PIXEL_WIDTH = map_width * Tile.TILE_PIXEL_WIDTH;
@@ -53,12 +50,30 @@ public class World {
 
 		map.getLayers().add(layer);
 
+		
+		
+
+		entityManager.getEntities().put(1, new Tree(100, 100));
+		entityManager.getEntities().put(2, new Tree(300, 100));
+		entityManager.getEntities().put(3, new Tree(500, 100));
+		
+		
+		entityManager.spawnEntity(this);
+	
 	}
 
-	public void render(SpriteBatch batch) {
-		player.render(batch);
-		entityManager.findTiles((int) player.getX(), (int) player.getY(), (int) player.getHitBox().getWidth(), (int) player.getHitBox().getHeight());
+	
+	// check ob Entities über oder unter dem spieler liegen fals ja render erst die und dann dass
+	
+	public void render(SpriteBatch spriteBatch) {
 
+		entityManager.render(spriteBatch, this);
+
+	}
+
+	public Tile getTile(int x, int y) {
+		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+		return (Tile) layer.getCell(x, y).getTile();
 	}
 
 	public TiledMap getMap() {
@@ -67,14 +82,6 @@ public class World {
 
 	public void setMap(TiledMap map) {
 		this.map = map;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 
 	public EntityManager getEntityManager() {

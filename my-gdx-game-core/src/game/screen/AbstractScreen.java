@@ -23,7 +23,7 @@ public abstract class AbstractScreen extends Stage implements Screen, InputProce
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.2f, 0.2f, 0.6f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		super.act(delta);
@@ -56,6 +56,7 @@ public abstract class AbstractScreen extends Stage implements Screen, InputProce
 	public void dispose() {
 		super.dispose();
 		this.assetManager.dispose();
+
 	}
 
 	public AssetManager getAssetManager() {
@@ -65,7 +66,5 @@ public abstract class AbstractScreen extends Stage implements Screen, InputProce
 	public void setAssetManager(AssetManager assetManager) {
 		this.assetManager = assetManager;
 	}
-	
-	
 
 }
