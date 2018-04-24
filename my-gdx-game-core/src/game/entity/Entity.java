@@ -12,6 +12,7 @@ import game.utility.Hitbox;
 
 public abstract class Entity {
 
+	public static int ID;
 	private float speed = 100;
 	private Vector2 velocity;
 	private Sprite sprite;
@@ -19,6 +20,7 @@ public abstract class Entity {
 	private ArrayList<Tile> touchedTiles;
 
 	public Entity(float x, float y, Hitbox hitbox) {
+		Entity.ID++;
 		this.hitbox = hitbox;
 		this.touchedTiles = new ArrayList<Tile>();
 		this.velocity = new Vector2();

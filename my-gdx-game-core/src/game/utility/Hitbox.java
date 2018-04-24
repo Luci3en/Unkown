@@ -37,11 +37,11 @@ public class Hitbox {
 	}
 
 	public float getX() {
-		return hitbox.x;
+		return hitbox.getX();
 	}
 
 	public float getY() {
-		return hitbox.y;
+		return hitbox.getY();
 	}
 
 	public Rectangle getHitbox() {

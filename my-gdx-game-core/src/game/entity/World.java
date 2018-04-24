@@ -15,10 +15,16 @@ public class World {
 
 		entityManager = new EntityManager();
 
-		entityManager.getEntities().put(1, new Tree(100, 100));
-		entityManager.getEntities().put(2, new Tree(200, 120));
-		entityManager.getEntities().put(3, new Tree(500, 100));
+		entityManager.getEntities().put(Entity.ID, new Tree(100, 100));
+		entityManager.getEntities().put(Entity.ID, new Tree(200, 120));
+		entityManager.getEntities().put(Entity.ID, new Tree(500, 100));
 
+		
+		
+		for (int id : entityManager.getEntities().keySet()) {
+			System.out.println(id);
+		}
+		
 		entityManager.spawnEntity(map);
 
 	}
@@ -27,7 +33,7 @@ public class World {
 		update(camera);
 
 		entityManager.render(spriteBatch, this);
-		//entityManager.debugRender(camera);
+		entityManager.debugRender(camera);
 	}
 
 	public void update(OrthographicCamera camera) {

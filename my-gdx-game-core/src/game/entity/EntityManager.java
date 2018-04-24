@@ -95,6 +95,7 @@ public class EntityManager {
 
 		for (Entry<Integer, Entity> entity : entities.entrySet()) {
 			entity.getValue().render(spriteBatch);
+			
 		}
 
 	}
