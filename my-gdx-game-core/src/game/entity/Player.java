@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+
+import game.utility.Hitbox;
 
 public class Player extends Entity implements InputProcessor {
 
@@ -17,14 +17,14 @@ public class Player extends Entity implements InputProcessor {
 	private float stateTime;
 
 	public Player(float x, float y) {
-		super(x, y);
-
+		super(x, y, new Hitbox(x, y, 0, 0, 32, 64));
+		
+		
 		this.pressed_up = false;
 		this.pressed_down = false;
 		this.pressed_left = false;
 		this.pressed_right = false;
-		super.setHitBox(new Rectangle(getX() + 8, getY(), 16, 20));
-
+		
 		this.stateTime = 0;
 
 		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("img/player_walking.atlas"));
@@ -41,34 +41,18 @@ public class Player extends Entity implements InputProcessor {
 		animation = new Animation<TextureRegion>(1f / 10f, textureAtlas.findRegions("right_walking"));
 		right_walking = animation;
 
-		// Texture texture = new Texture(Gdx.files.internal("img/Alina 2.0
-		// bewegt.png"));
-		// TextureRegion[][] textureRegion = TextureRegion.split(texture, 32, 32);
-		//
-		// TextureRegion[] walkFrames = new TextureRegion[5 * 1];
-		//
-		// int index = 0;
-		// for (int i = 3; i < 4; i++) {
-		// for (int j = 0; j < 5; j++) {
-		// walkFrames[index++] = textureRegion[i][j];
-		// }
-		// }
-		//
-		//
-		// animation = new Animation<TextureRegion>(1f / 10f, walkFrames);
-		// left_walking = animation;
-
 	}
 
 	@Override
-	public void render(SpriteBatch spriteBatch) {
+	public void render(SpriteBatch spriteBatch, World world) {
 		stateTime += Gdx.graphics.getDeltaTime();
-		update(Gdx.graphics.getDeltaTime());
+		update(Gdx.graphics.getDeltaTime(), world);
 
 		if (animation != null) {
+
 			TextureRegion currentFrame = (TextureRegion) animation.getKeyFrame(stateTime, true);
 
-			if (super.move()) {
+			if (super.move(world)) {
 				spriteBatch.draw(currentFrame, super.getX(), super.getY());
 			} else {
 				TextureRegion[] currentFrames = animation.getKeyFrames();
@@ -78,33 +62,35 @@ public class Player extends Entity implements InputProcessor {
 		}
 	}
 
-	public void update(float delta) {
-		
+	public void update(float delta, World world) {
 
-		
 		super.getVelocity().x = 0;
 		super.getVelocity().y = 0;
 
 		if (pressed_left) {
+			animation = left_walking;
 			super.getVelocity().x = -super.getSpeed() * delta;
 		}
 
 		if (pressed_right) {
+			animation = right_walking;
 			super.getVelocity().x = super.getSpeed() * delta;
 
 		}
 
 		if (pressed_up) {
+			animation = up_walking;
 			super.getVelocity().y = super.getSpeed() * delta;
 
 		}
 
 		if (pressed_down) {
+			animation = down_walking;
 			super.getVelocity().y = -super.getSpeed() * delta;
 
 		}
 
-		move();
+		move(world);
 
 	}
 

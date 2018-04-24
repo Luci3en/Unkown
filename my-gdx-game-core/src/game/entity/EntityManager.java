@@ -4,54 +4,64 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+
+import game.utility.Hitbox;
 
 public class EntityManager {
 
-	private ArrayList<Tile> liste;
+	private ArrayList<Tile> touchedTiles;
 	private HashMap<Integer, Entity> entities;
 	private Player player;
+	private ShapeRenderer shapeRenderer;
 
 	public EntityManager() {
-		this.liste = new ArrayList<Tile>();
+
+		this.touchedTiles = new ArrayList<Tile>();
 		this.entities = new HashMap<Integer, Entity>();
 		this.player = new Player(10, 10);
+
+		this.shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setAutoShapeType(true);
 	}
 
-	public void findTiles(int x, int y, int width, int height, World world) {
+	public ArrayList<Tile> findTiles(Hitbox hitbox, Map map) {
 
-		liste.clear();
+		touchedTiles.clear();
 
-		int left = x / Tile.TILE_PIXEL_WIDTH;
-		int right = (x + width) / Tile.TILE_PIXEL_WIDTH;
-		int buttom = y / Tile.TILE_PIXEL_HEIGHT;
-		int top = (y + height) / Tile.TILE_PIXEL_HEIGHT;
+		int left = (int) (hitbox.getX() / Tile.TILE_PIXEL_WIDTH);
+		int right = (int) ((hitbox.getX() + hitbox.getHitbox().width) / Tile.TILE_PIXEL_WIDTH);
+		int buttom = (int) (hitbox.getY() / Tile.TILE_PIXEL_HEIGHT);
+		int top = (int) ((hitbox.getY() + hitbox.getHitbox().height) / Tile.TILE_PIXEL_HEIGHT);
 
 		for (int i = left; i <= right; i++) {
 			for (int j = buttom; j <= top; j++) {
 
-				liste.add(world.getTile(i, j));
+				touchedTiles.add(map.getTile(i, j));
 
 			}
 		}
-
+		return touchedTiles;
 	}
 
-	public void spawnEntity(World world) {
+	public void spawnEntity(Map map) {
 
-		for (Entry<Integer, Entity> iterable : world.getEntityManager().getEntities().entrySet()) {
+		for (Entry<Integer, Entity> iterable : entities.entrySet()) {
 
 			int left = (int) iterable.getValue().getX() / Tile.TILE_PIXEL_WIDTH;
-			int right = (int) (iterable.getValue().getX() + iterable.getValue().getHitBox().getWidth())
+			int right = (int) (iterable.getValue().getX() + iterable.getValue().getHitBox().getHitbox().getWidth())
 					/ Tile.TILE_PIXEL_WIDTH;
 			int buttom = (int) iterable.getValue().getY() / Tile.TILE_PIXEL_HEIGHT;
-			int top = (int) (iterable.getValue().getY() + iterable.getValue().getHitBox().getHeight())
+			int top = (int) (iterable.getValue().getY() + iterable.getValue().getHitBox().getHitbox().getHeight())
 					/ Tile.TILE_PIXEL_HEIGHT;
 
 			for (int i = left; i <= right; i++) {
 				for (int j = buttom; j <= top; j++) {
 
-					world.getTile(i, j).setEntityId(iterable.getKey());
+					map.getTile(i, j).setEntityId(iterable.getKey());
 				}
 			}
 
@@ -59,17 +69,18 @@ public class EntityManager {
 
 	}
 
-	public void update(World world) {
-		findTiles((int) player.getHitBox().getX(), (int) player.getHitBox().getY(), (int) player.getHitBox().getWidth(),
-				(int) player.getHitBox().getHeight(), world);
+	public boolean collision(Entity entity) {
 
-		for (Tile tile : liste) {
+		boolean collided = false;
+
+		for (Tile tile : entity.getTouchedTiles()) {
 
 			if (tile.getEntityId() != 0) {
 				if (entities.containsKey(tile.getEntityId())) {
-					
-					player.collision(entities.get(tile.getEntityId()));
 
+					if (entity.collision(entities.get(tile.getEntityId()))) {
+						collided = true;
+					}
 				}
 			} else {
 				continue;
@@ -77,12 +88,13 @@ public class EntityManager {
 
 		}
 
+		return collided;
+
 	}
 
 	public void render(SpriteBatch spriteBatch, World world) {
 
-		update(world);
-		player.render(spriteBatch);
+		player.render(spriteBatch, world);
 
 		for (Entry<Integer, Entity> entity : entities.entrySet()) {
 			entity.getValue().render(spriteBatch);
@@ -90,12 +102,33 @@ public class EntityManager {
 
 	}
 
+	public void debugRender(OrthographicCamera camera) {
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		shapeRenderer.begin();
+
+		// for (Tile iterable_element : world.getEntityManager().getListe()) {
+		//
+		// shapeRenderer.rect(iterable_element.getX() * 32, iterable_element.getY() *
+		// 32, 32, 32);
+		// }
+
+		for (Entry<Integer, Entity> iterable : getEntities().entrySet()) {
+
+			iterable.getValue().renderHitbox(shapeRenderer);
+
+		}
+
+		getPlayer().renderHitbox(shapeRenderer);
+
+		shapeRenderer.end();
+	}
+
 	public ArrayList<Tile> getListe() {
-		return liste;
+		return touchedTiles;
 	}
 
 	public void setListe(ArrayList<Tile> liste) {
-		this.liste = liste;
+		this.touchedTiles = liste;
 	}
 
 	public HashMap<Integer, Entity> getEntities() {

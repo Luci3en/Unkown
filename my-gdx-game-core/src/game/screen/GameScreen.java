@@ -10,31 +10,23 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import game.entity.Entity;
-import game.entity.Tile;
 import game.entity.World;
 
 public class GameScreen extends AbstractScreen {
 
 	private SpriteBatch spriteBatch;
-	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
-	private ShapeRenderer shapeRenderer;
 
 	public GameScreen(AssetManager assetManager) {
 		super(assetManager, 600f, 400f);
-		this.shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setAutoShapeType(true);
-		this.spriteBatch = new SpriteBatch();
-		this.world = new World(20, 20);
-		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(world.getMap());
 
+		this.spriteBatch = new SpriteBatch();
+		this.world = new World();
 	}
 
 	@Override
@@ -50,48 +42,20 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		updateCamera();
-
-		tiledMapRenderer.setView((OrthographicCamera) getCamera());
-		tiledMapRenderer.render();
-
 		spriteBatch.setProjectionMatrix(getCamera().combined);
 		spriteBatch.begin();
 
-		world.render(spriteBatch);
+		world.render(spriteBatch, (OrthographicCamera) getCamera());
 
 		spriteBatch.end();
 
-		debugRender();
-
 		super.act(delta);
 		super.draw();
-
 	}
 
 	@Override
 	public void buildStage() {
 
-	}
-
-	public void debugRender() {
-		shapeRenderer.setProjectionMatrix(getCamera().combined);
-		shapeRenderer.begin();
-
-		for (Tile iterable_element : world.getEntityManager().getListe()) {
-
-			shapeRenderer.rect(iterable_element.getX() * 32, iterable_element.getY() * 32, 32, 32);
-		}
-
-		for (Entry<Integer, Entity> iterable : world.getEntityManager().getEntities().entrySet()) {
-
-			iterable.getValue().debugHitbox(shapeRenderer);
-
-		}
-
-		world.getEntityManager().getPlayer().debugHitbox(shapeRenderer);
-
-		shapeRenderer.end();
 	}
 
 	public Dialog getExitDialog() {
@@ -101,7 +65,6 @@ public class GameScreen extends AbstractScreen {
 				setName("exit");
 				button("Yes", "Yes");
 				button("No", "No");
-
 			}
 
 			@Override
@@ -110,35 +73,16 @@ public class GameScreen extends AbstractScreen {
 				if (object.equals("Yes")) {
 
 					Gdx.app.exit();
-
 				}
-
 			}
-
 		}.show(this);
-	}
-
-	public void updateCamera() {
-
-		getCamera().position.x = world.getEntityManager().getPlayer().getX();
-
-		getCamera().position.x = MathUtils.clamp(getCamera().position.x, getCamera().viewportWidth / 2,
-				World.MAP_PIXEL_WIDTH - (getCamera().viewportWidth / 2));
-
-		getCamera().position.y = world.getEntityManager().getPlayer().getY();
-
-		getCamera().position.y = MathUtils.clamp(getCamera().position.y, getCamera().viewportHeight / 2,
-				World.MAP_PIXEL_HEIGHT - (getCamera().viewportHeight / 2));
-
-		getCamera().update();
 
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		spriteBatch.dispose();
-		tiledMapRenderer.dispose();
+		this.spriteBatch.dispose();
 	}
 
 	@Override
