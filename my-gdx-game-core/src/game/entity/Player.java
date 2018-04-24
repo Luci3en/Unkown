@@ -12,19 +12,25 @@ import game.utility.Hitbox;
 
 public class Player extends Entity implements InputProcessor {
 
+	// IDEE: die klasse Player als den spieler betrachten der eine Entity steuern
+	// kann
+	// d.h. nicht extends Entity sondern er sort eine Entity --> (gabi: focusEntity)
+	// Die aktuelle Player klass würde zu Hero umgeschrieben werden eine Entity die
+	// eine Animation hat
+	// angreifen kann... etc.
+
 	private boolean pressed_up, pressed_down, pressed_left, pressed_right;
 	private Animation<TextureRegion> animation, up_walking, down_walking, left_walking, right_walking;
 	private float stateTime;
 
 	public Player(float x, float y) {
-		super(x, y, new Hitbox(x, y, 0, 0, 32, 64));
-		
-		
+		super(x, y, new Hitbox(x, y, 0, 0, 32, 32));
+
 		this.pressed_up = false;
 		this.pressed_down = false;
 		this.pressed_left = false;
 		this.pressed_right = false;
-		
+
 		this.stateTime = 0;
 
 		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("img/player_walking.atlas"));
@@ -90,7 +96,7 @@ public class Player extends Entity implements InputProcessor {
 
 		}
 
-		move(world);
+		super.move(world);
 
 	}
 

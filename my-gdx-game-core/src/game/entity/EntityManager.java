@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 
 import game.utility.Hitbox;
 
@@ -23,9 +22,8 @@ public class EntityManager {
 		this.touchedTiles = new ArrayList<Tile>();
 		this.entities = new HashMap<Integer, Entity>();
 		this.player = new Player(10, 10);
-
 		this.shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setAutoShapeType(true);
+		this.shapeRenderer.setAutoShapeType(true);
 	}
 
 	public ArrayList<Tile> findTiles(Hitbox hitbox, Map map) {
@@ -89,7 +87,6 @@ public class EntityManager {
 		}
 
 		return collided;
-
 	}
 
 	public void render(SpriteBatch spriteBatch, World world) {
@@ -106,7 +103,7 @@ public class EntityManager {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin();
 
-		// for (Tile iterable_element : world.getEntityManager().getListe()) {
+		// for (Tile iterable_element : player.getTouchedTiles()) {
 		//
 		// shapeRenderer.rect(iterable_element.getX() * 32, iterable_element.getY() *
 		// 32, 32, 32);

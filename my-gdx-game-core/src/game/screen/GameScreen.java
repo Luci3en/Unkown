@@ -42,6 +42,8 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		world.getMap().render((OrthographicCamera) getCamera()); 
+		
 		spriteBatch.setProjectionMatrix(getCamera().combined);
 		spriteBatch.begin();
 

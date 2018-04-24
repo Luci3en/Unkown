@@ -12,7 +12,6 @@ import game.utility.Hitbox;
 
 public abstract class Entity {
 
-	private float x, y;
 	private float speed = 100;
 	private Vector2 velocity;
 	private Sprite sprite;
@@ -23,8 +22,6 @@ public abstract class Entity {
 		this.hitbox = hitbox;
 		this.touchedTiles = new ArrayList<Tile>();
 		this.velocity = new Vector2();
-		this.x = x;
-		this.y = y;
 
 	}
 
@@ -42,29 +39,26 @@ public abstract class Entity {
 
 	public boolean move(World world) {
 
-		float old_tempX = hitbox.getHitbox().getX();
-		float old_tempY = hitbox.getHitbox().getY();
+		float old_tempX = hitbox.getX();
+		float old_tempY = hitbox.getY();
 
-		hitbox.getHitbox().setX(hitbox.getHitbox().getX() + velocity.x);
-		hitbox.getHitbox().setY(hitbox.getHitbox().getY() + velocity.y);
+		hitbox.setX(hitbox.getX() + velocity.x);
+		hitbox.setY(hitbox.getY() + velocity.y);
 
 		if (velocity.x != 0 || velocity.y != 0) {
 
-			world.getEntityManager().findTiles(hitbox, world.getMap());
+			touchedTiles = world.getEntityManager().findTiles(hitbox, world.getMap());
 
 			if (world.getEntityManager().collision(this)) {
 
-				hitbox.getHitbox().setX(old_tempX);
-				this.setX(hitbox.getHitbox().getX());
+				hitbox.setX(old_tempX);
 
 			}
+
 			if (world.getEntityManager().collision(this)) {
 				velocity.y = 0;
-				hitbox.getHitbox().setY(old_tempY);
-				this.setY(hitbox.getHitbox().getY());
+				hitbox.setY(old_tempY);
 			}
-			this.setX(hitbox.getHitbox().getX());
-			this.setY(hitbox.getHitbox().getY());
 
 			return true;
 		} else {
@@ -89,17 +83,16 @@ public abstract class Entity {
 	}
 
 	public void renderHitbox(ShapeRenderer shapeRenderer) {
-		shapeRenderer.rect(hitbox.getHitbox().x, hitbox.getHitbox().y, hitbox.getHitbox().width,
-				hitbox.getHitbox().height);
+		shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getHitbox().width, hitbox.getHitbox().height);
 	}
 
 	public float getX() {
-		return x;
+		return hitbox.getX();
 	}
 
 	public void setX(float x) {
 		if (x >= 0 && x <= Map.MAP_PIXEL_WIDTH - hitbox.getHitbox().width) {
-			this.x = x;
+			this.hitbox.setX(x);
 		} else {
 			return;
 		}
@@ -107,13 +100,13 @@ public abstract class Entity {
 	}
 
 	public float getY() {
-		return y;
+		return hitbox.getY();
 	}
 
 	public void setY(float y) {
 
 		if (y >= 0 && y <= Map.MAP_PIXEL_HEIGHT - hitbox.getHitbox().height) {
-			this.y = y;
+			this.hitbox.setY(y);
 		} else {
 			return;
 		}

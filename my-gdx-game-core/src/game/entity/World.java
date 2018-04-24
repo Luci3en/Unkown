@@ -15,29 +15,26 @@ public class World {
 
 		entityManager = new EntityManager();
 
-		entityManager.getEntities().put(2, new Tree(100, 100));
-		entityManager.getEntities().put(3, new Tree(200, 120));
-		entityManager.getEntities().put(4, new Tree(500, 100));
-		
-		
-	
-		
+		entityManager.getEntities().put(1, new Tree(100, 100));
+		entityManager.getEntities().put(2, new Tree(200, 120));
+		entityManager.getEntities().put(3, new Tree(500, 100));
+
 		entityManager.spawnEntity(map);
 
-	}
-	
-	public void update(OrthographicCamera camera) {
-		updateCamera(camera, entityManager.getPlayer());
 	}
 
 	public void render(SpriteBatch spriteBatch, OrthographicCamera camera) {
 		update(camera);
-		map.render(camera);
+
 		entityManager.render(spriteBatch, this);
-		entityManager.debugRender(camera);
+		//entityManager.debugRender(camera);
 	}
 
-	public void updateCamera(OrthographicCamera camera, Entity entity) {
+	public void update(OrthographicCamera camera) {
+		focusCameraOnEntity(camera, entityManager.getPlayer());
+	}
+
+	public void focusCameraOnEntity(OrthographicCamera camera, Entity entity) {
 
 		camera.position.x = entity.getX();
 
@@ -69,6 +66,4 @@ public class World {
 		this.map = map;
 	}
 
-	
-	
 }
