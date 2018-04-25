@@ -14,14 +14,12 @@ public class EntityManager {
 
 	private ArrayList<Tile> touchedTiles;
 	private HashMap<Integer, Entity> entities;
-	private Player player;
 	private ShapeRenderer shapeRenderer;
 
 	public EntityManager() {
 
 		this.touchedTiles = new ArrayList<Tile>();
 		this.entities = new HashMap<Integer, Entity>();
-		this.player = new Player(10, 10);
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setAutoShapeType(true);
 	}
@@ -31,9 +29,9 @@ public class EntityManager {
 		touchedTiles.clear();
 
 		int left = (int) (hitbox.getX() / Tile.TILE_PIXEL_WIDTH);
-		int right = (int) ((hitbox.getX() + hitbox.getHitbox().width) / Tile.TILE_PIXEL_WIDTH);
+		int right = (int) ((hitbox.getX() + hitbox.getWidth()) / Tile.TILE_PIXEL_WIDTH);
 		int buttom = (int) (hitbox.getY() / Tile.TILE_PIXEL_HEIGHT);
-		int top = (int) ((hitbox.getY() + hitbox.getHitbox().height) / Tile.TILE_PIXEL_HEIGHT);
+		int top = (int) ((hitbox.getY() + hitbox.getHeight()) / Tile.TILE_PIXEL_HEIGHT);
 
 		for (int i = left; i <= right; i++) {
 			for (int j = buttom; j <= top; j++) {
@@ -50,10 +48,10 @@ public class EntityManager {
 		for (Entry<Integer, Entity> iterable : entities.entrySet()) {
 
 			int left = (int) iterable.getValue().getX() / Tile.TILE_PIXEL_WIDTH;
-			int right = (int) (iterable.getValue().getX() + iterable.getValue().getHitBox().getHitbox().getWidth())
+			int right = (int) (iterable.getValue().getX() + iterable.getValue().getHitBox().getWidth())
 					/ Tile.TILE_PIXEL_WIDTH;
 			int buttom = (int) iterable.getValue().getY() / Tile.TILE_PIXEL_HEIGHT;
-			int top = (int) (iterable.getValue().getY() + iterable.getValue().getHitBox().getHitbox().getHeight())
+			int top = (int) (iterable.getValue().getY() + iterable.getValue().getHitBox().getHeight())
 					/ Tile.TILE_PIXEL_HEIGHT;
 
 			for (int i = left; i <= right; i++) {
@@ -73,10 +71,11 @@ public class EntityManager {
 
 		for (Tile tile : entity.getTouchedTiles()) {
 
-			if (tile.getEntityId() != 0) {
+			if (tile.getEntityId() != 0 && tile.getEntityId() != entity.getId()){
 				if (entities.containsKey(tile.getEntityId())) {
 
 					if (entity.collision(entities.get(tile.getEntityId()))) {
+
 						collided = true;
 					}
 				}
@@ -89,13 +88,18 @@ public class EntityManager {
 		return collided;
 	}
 
-	public void render(SpriteBatch spriteBatch, World world) {
-
-		player.render(spriteBatch, world);
+	public void render(SpriteBatch spriteBatch, Map map) {
 
 		for (Entry<Integer, Entity> entity : entities.entrySet()) {
-			entity.getValue().render(spriteBatch);
-			
+
+			if (entity.getValue() instanceof Creature) {
+
+				entity.getValue().render(spriteBatch, this, map);
+			} else {
+
+				entity.getValue().render(spriteBatch);
+			}
+
 		}
 
 	}
@@ -116,7 +120,7 @@ public class EntityManager {
 
 		}
 
-		getPlayer().renderHitbox(shapeRenderer);
+
 
 		shapeRenderer.end();
 	}
@@ -135,14 +139,6 @@ public class EntityManager {
 
 	public void setEntities(HashMap<Integer, Entity> entities) {
 		this.entities = entities;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 
 }

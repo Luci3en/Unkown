@@ -36,6 +36,14 @@ public class Hitbox {
 
 	}
 
+	public float getWidth() {
+		return hitbox.getWidth();
+	}
+
+	public float getHeight() {
+		return hitbox.getHeight();
+	}
+
 	public float getX() {
 		return hitbox.getX();
 	}

@@ -12,15 +12,22 @@ import game.utility.Hitbox;
 
 public abstract class Entity {
 
-	public static int ID;
+	public static int ID = 1;
+
+	private int id;
 	private float speed = 100;
 	private Vector2 velocity;
 	private Sprite sprite;
 	private Hitbox hitbox;
 	private ArrayList<Tile> touchedTiles;
+	private float x, y;
 
 	public Entity(float x, float y, Hitbox hitbox) {
+		this.id = Entity.ID;
 		Entity.ID++;
+		this.x = x;
+		this.y = y;
+
 		this.hitbox = hitbox;
 		this.touchedTiles = new ArrayList<Tile>();
 		this.velocity = new Vector2();
@@ -33,39 +40,38 @@ public abstract class Entity {
 		sprite.draw(spriteBatch);
 	}
 
-	public void render(SpriteBatch spriteBatch, World world) {
+	public void render(SpriteBatch spriteBatch, EntityManager entityManager, Map map) {
 		sprite.setX(getX());
 		sprite.setY(getY());
 		sprite.draw(spriteBatch);
 	}
 
-	public boolean move(World world) {
+	public void move(EntityManager entityManager, Map map) {
 
 		float old_tempX = hitbox.getX();
 		float old_tempY = hitbox.getY();
 
 		hitbox.setX(hitbox.getX() + velocity.x);
 		hitbox.setY(hitbox.getY() + velocity.y);
+		setX(getX() + velocity.x);
+		setY(getY() + velocity.y);
 
 		if (velocity.x != 0 || velocity.y != 0) {
 
-			touchedTiles = world.getEntityManager().findTiles(hitbox, world.getMap());
+			touchedTiles = entityManager.findTiles(hitbox, map);
 
-			if (world.getEntityManager().collision(this)) {
-
+			if (entityManager.collision(this)) {
 				hitbox.setX(old_tempX);
+				setX(old_tempX);
 
 			}
 
-			if (world.getEntityManager().collision(this)) {
+			if (entityManager.collision(this)) {
 				velocity.y = 0;
 				hitbox.setY(old_tempY);
+				setY(old_tempY);
 			}
 
-			return true;
-		} else {
-
-			return false;
 		}
 
 	}
@@ -89,30 +95,35 @@ public abstract class Entity {
 	}
 
 	public float getX() {
-		return hitbox.getX();
+		return x;
 	}
 
 	public void setX(float x) {
-		if (x >= 0 && x <= Map.MAP_PIXEL_WIDTH - hitbox.getHitbox().width) {
-			this.hitbox.setX(x);
-		} else {
-			return;
-		}
-
+		this.x = x;
 	}
 
 	public float getY() {
-		return hitbox.getY();
+		return y;
 	}
 
 	public void setY(float y) {
+		this.y = y;
+	}
 
-		if (y >= 0 && y <= Map.MAP_PIXEL_HEIGHT - hitbox.getHitbox().height) {
-			this.hitbox.setY(y);
-		} else {
-			return;
-		}
+	public int getId() {
+		return id;
+	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Hitbox getHitbox() {
+		return hitbox;
+	}
+
+	public void setHitbox(Hitbox hitbox) {
+		this.hitbox = hitbox;
 	}
 
 	public Hitbox getHitBox() {

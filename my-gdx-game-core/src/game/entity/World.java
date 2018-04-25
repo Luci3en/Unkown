@@ -6,38 +6,37 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class World {
 
+	private Player player;
 	private EntityManager entityManager;
 	private Map map;
 
 	public World() {
 
+		this.player = new Player();
+		player.setCurrentEntityID(4);
 		this.map = new Map(50, 50);
-
-		entityManager = new EntityManager();
+		this.entityManager = new EntityManager();
 
 		entityManager.getEntities().put(Entity.ID, new Tree(100, 100));
 		entityManager.getEntities().put(Entity.ID, new Tree(200, 120));
 		entityManager.getEntities().put(Entity.ID, new Tree(500, 100));
+		entityManager.getEntities().put(Entity.ID, new Creature(10, 10));
 
-		
-		
-		for (int id : entityManager.getEntities().keySet()) {
-			System.out.println(id);
-		}
-		
 		entityManager.spawnEntity(map);
-
 	}
 
 	public void render(SpriteBatch spriteBatch, OrthographicCamera camera) {
+		player.update(entityManager);
 		update(camera);
 
-		entityManager.render(spriteBatch, this);
+		entityManager.render(spriteBatch, map);
+		
+		
 		entityManager.debugRender(camera);
 	}
 
 	public void update(OrthographicCamera camera) {
-		focusCameraOnEntity(camera, entityManager.getPlayer());
+		 focusCameraOnEntity(camera, entityManager.getEntities().get(player.getCurrentEntityID()));
 	}
 
 	public void focusCameraOnEntity(OrthographicCamera camera, Entity entity) {
@@ -70,6 +69,14 @@ public class World {
 
 	public void setMap(Map map) {
 		this.map = map;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 }
