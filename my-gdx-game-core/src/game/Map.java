@@ -1,13 +1,11 @@
-package game.entity;
+package game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 public class Map {
 
@@ -16,12 +14,11 @@ public class Map {
 	public static int MAP_PIXEL_WIDTH;
 	public static int MAP_PIXEL_HEIGHT;
 
-	private TiledMap map;
-	private OrthogonalTiledMapRenderer tiledMapRenderer;
+	private TiledMap tiledMap;
 
 	public Map(int map_width, int map_height) {
 
-		this.map = new TiledMap();
+		this.tiledMap = new TiledMap();
 
 		MAP_WIDTH = map_width;
 		MAP_HEIGHT = map_height;
@@ -47,19 +44,21 @@ public class Map {
 
 		}
 
-		map.getLayers().add(layer);
-		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
+		tiledMap.getLayers().add(layer);
 
-	}
-
-	public void render(OrthographicCamera camera) {
-		tiledMapRenderer.setView(camera);
-		tiledMapRenderer.render();
 	}
 
 	public Tile getTile(int x, int y) {
-		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+		TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
 		return (Tile) layer.getCell(x, y).getTile();
+	}
+
+	public TiledMap getTiledMap() {
+		return tiledMap;
+	}
+
+	public void setTiledMap(TiledMap tiledMap) {
+		this.tiledMap = tiledMap;
 	}
 
 }

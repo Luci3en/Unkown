@@ -2,7 +2,7 @@ package game.utility;
 
 import com.badlogic.gdx.math.Rectangle;
 
-import game.entity.Map;
+import game.Map;
 
 public class Hitbox {
 
@@ -10,10 +10,10 @@ public class Hitbox {
 	private float offsetX, offsetY;
 
 	public Hitbox(float x, float y, float offsetX, float offsetY, float width, float height) {
-
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
 		this.hitbox = new Rectangle(x + offsetX, y + offsetY, width, height);
+	
 
 	}
 

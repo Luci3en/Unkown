@@ -15,7 +15,6 @@ public class SettingsScreen extends AbstractScreen {
 
 	public SettingsScreen(AssetManager assetManager) {
 		super(assetManager, 800f, 800f);
-		this.buildStage();
 	}
 
 	@Override
@@ -36,10 +35,6 @@ public class SettingsScreen extends AbstractScreen {
 
 		});
 
-		
-		
-		
-		
 		CheckBox fullscreen = new CheckBox(" Fullscreen", getAssetManager().get("skin/metal-ui.json", Skin.class));
 		fullscreen.addListener(new ClickListener() {
 

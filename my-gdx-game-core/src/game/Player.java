@@ -1,8 +1,13 @@
-package game.entity;
+package game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
+
+import game.entity.Creature;
+import game.entity.Entity;
+import game.entity.EntityManager;
 
 public class Player implements InputProcessor {
 
@@ -20,27 +25,29 @@ public class Player implements InputProcessor {
 
 	public void update(EntityManager entityManager) {
 
-		if (pressed_left || pressed_right || pressed_down || pressed_up) {
+		if (entity == null) {
 			entity = entityManager.getEntities().get(currentEntityID);
+		}
 
-			if (pressed_left) {
-				entity.getVelocity().x = -entity.getSpeed() * Gdx.graphics.getDeltaTime();
-			}
+		
+		
+		if (pressed_left) {
+			entity.getVelocity().x = -entity.getSpeed() * Gdx.graphics.getDeltaTime();
+		}
 
-			if (pressed_right) {
-				entity.getVelocity().x = entity.getSpeed() * Gdx.graphics.getDeltaTime();
-			}
+		if (pressed_right) {
+			entity.getVelocity().x = entity.getSpeed() * Gdx.graphics.getDeltaTime();
+		}
 
-			if (pressed_down) {
-				entity.getVelocity().y = -entity.getSpeed() * Gdx.graphics.getDeltaTime();
-			}
+		if (pressed_down) {
+			entity.getVelocity().y = -entity.getSpeed() * Gdx.graphics.getDeltaTime();
+		}
 
-			if (pressed_up) {
-				entity.getVelocity().y = entity.getSpeed() * Gdx.graphics.getDeltaTime();
-
-			}
+		if (pressed_up) {
+			entity.getVelocity().y = entity.getSpeed() * Gdx.graphics.getDeltaTime();
 
 		}
+
 	}
 
 	@Override
@@ -63,6 +70,8 @@ public class Player implements InputProcessor {
 		case Input.Keys.RIGHT:
 			pressed_right = true;
 			break;
+
+		case Input.Keys.I:
 
 		default:
 

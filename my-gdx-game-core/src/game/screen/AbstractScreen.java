@@ -16,6 +16,7 @@ public abstract class AbstractScreen extends Stage implements Screen, InputProce
 	public AbstractScreen(AssetManager assetManager, float viewportWidth, float viewportHeight) {
 		super(new StretchViewport(viewportWidth, viewportHeight, new OrthographicCamera()));
 		this.assetManager = assetManager;
+		buildStage();
 	}
 
 	// Subclasses load actors in this method
@@ -55,7 +56,10 @@ public abstract class AbstractScreen extends Stage implements Screen, InputProce
 	@Override
 	public void dispose() {
 		super.dispose();
-		this.assetManager.dispose();
+
+		if (this instanceof GameScreen) {
+			this.assetManager.dispose();
+		}
 
 	}
 

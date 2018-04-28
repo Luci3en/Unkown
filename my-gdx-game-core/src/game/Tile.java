@@ -1,4 +1,6 @@
-package game.entity;
+package game;
+
+import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
@@ -9,7 +11,7 @@ public class Tile extends StaticTiledMapTile {
 	public static int TILE_PIXEL_HEIGHT = 32;
 	private int x;
 	private int y;
-	private int entityId;
+	private ArrayList<Integer> entityIDs;
 
 	public Tile(TextureRegion textureRegion) {
 		super(textureRegion);
@@ -18,8 +20,14 @@ public class Tile extends StaticTiledMapTile {
 
 	public Tile(TextureRegion textureRegion, int x, int y) {
 		super(textureRegion);
+		this.entityIDs = new ArrayList<Integer>();
 		this.x = x;
 		this.y = y;
+	}
+
+	@Override
+	public String toString() {
+		return "Tile [x=" + x + ", y=" + y + ", entityIDs=" + entityIDs + "]";
 	}
 
 	public int getX() {
@@ -38,12 +46,12 @@ public class Tile extends StaticTiledMapTile {
 		this.y = y;
 	}
 
-	public int getEntityId() {
-		return entityId;
+	public ArrayList<Integer> getEntityIDs() {
+		return entityIDs;
 	}
 
-	public void setEntityId(int entityId) {
-		this.entityId = entityId;
+	public void setEntityIDs(ArrayList<Integer> entityIDs) {
+		this.entityIDs = entityIDs;
 	}
 
 }

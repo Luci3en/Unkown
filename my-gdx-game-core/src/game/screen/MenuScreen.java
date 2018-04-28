@@ -15,7 +15,6 @@ public class MenuScreen extends AbstractScreen {
 
 	public MenuScreen(AssetManager assetManager) {
 		super(assetManager, 800f, 800f);
-		this.buildStage();
 	}
 
 	@Override
@@ -47,11 +46,8 @@ public class MenuScreen extends AbstractScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
+				dispose();
 				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(getAssetManager()));
-		
-				// welcher screen genau wird disposed;
-				//dispose();
-		
 
 			}
 

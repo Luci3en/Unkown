@@ -4,29 +4,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import game.Map;
+import game.Tile;
 import game.utility.Hitbox;
 
 public class EntityManager {
 
-	private ArrayList<Tile> touchedTiles;
 	private HashMap<Integer, Entity> entities;
-	private ShapeRenderer shapeRenderer;
 
 	public EntityManager() {
-
-		this.touchedTiles = new ArrayList<Tile>();
 		this.entities = new HashMap<Integer, Entity>();
-		this.shapeRenderer = new ShapeRenderer();
-		this.shapeRenderer.setAutoShapeType(true);
+
 	}
 
 	public ArrayList<Tile> findTiles(Hitbox hitbox, Map map) {
 
-		touchedTiles.clear();
+		// Buffer einbauen
+		ArrayList<Tile> touchedTiles = new ArrayList<Tile>();
 
 		int left = (int) (hitbox.getX() / Tile.TILE_PIXEL_WIDTH);
 		int right = (int) ((hitbox.getX() + hitbox.getWidth()) / Tile.TILE_PIXEL_WIDTH);
@@ -40,47 +37,31 @@ public class EntityManager {
 
 			}
 		}
+
 		return touchedTiles;
 	}
 
-	public void spawnEntity(Map map) {
+	public boolean collidingWithEntity(Entity entity) {
 
-		for (Entry<Integer, Entity> iterable : entities.entrySet()) {
-
-			int left = (int) iterable.getValue().getX() / Tile.TILE_PIXEL_WIDTH;
-			int right = (int) (iterable.getValue().getX() + iterable.getValue().getHitBox().getWidth())
-					/ Tile.TILE_PIXEL_WIDTH;
-			int buttom = (int) iterable.getValue().getY() / Tile.TILE_PIXEL_HEIGHT;
-			int top = (int) (iterable.getValue().getY() + iterable.getValue().getHitBox().getHeight())
-					/ Tile.TILE_PIXEL_HEIGHT;
-
-			for (int i = left; i <= right; i++) {
-				for (int j = buttom; j <= top; j++) {
-
-					map.getTile(i, j).setEntityId(iterable.getKey());
-				}
-			}
-
-		}
-
-	}
-
-	public boolean collision(Entity entity) {
-
+		System.out.println("....");
 		boolean collided = false;
 
 		for (Tile tile : entity.getTouchedTiles()) {
 
-			if (tile.getEntityId() != 0 && tile.getEntityId() != entity.getId()){
-				if (entities.containsKey(tile.getEntityId())) {
+			System.out.println(tile.getEntityIDs().toString());
 
-					if (entity.collision(entities.get(tile.getEntityId()))) {
+			for (int id : tile.getEntityIDs()) {
+				if (id != 0 && id != entity.getId()) {
 
+					if (entity.collision(entities.get(id))) {
+						System.out.println("Colliding with: " + id);
 						collided = true;
 					}
+
+				} else {
+					System.out.println("continue;");
+					continue;
 				}
-			} else {
-				continue;
 			}
 
 		}
@@ -104,33 +85,19 @@ public class EntityManager {
 
 	}
 
-	public void debugRender(OrthographicCamera camera) {
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.begin();
+	public void debugRender(ShapeRenderer shapeRenderer) {
 
-		// for (Tile iterable_element : player.getTouchedTiles()) {
-		//
-		// shapeRenderer.rect(iterable_element.getX() * 32, iterable_element.getY() *
-		// 32, 32, 32);
-		// }
+		for (Entry<Integer, Entity> entity : entities.entrySet()) {
+			entity.getValue().renderHitbox(shapeRenderer);
 
-		for (Entry<Integer, Entity> iterable : getEntities().entrySet()) {
+			for (int i = 0; i < entity.getValue().getTouchedTiles().size(); i++) {
 
-			iterable.getValue().renderHitbox(shapeRenderer);
+				shapeRenderer.rect(entity.getValue().getTouchedTiles().get(i).getX() * 32,
+						entity.getValue().getTouchedTiles().get(i).getY() * 32, 32, 32);
+			}
 
 		}
 
-
-
-		shapeRenderer.end();
-	}
-
-	public ArrayList<Tile> getListe() {
-		return touchedTiles;
-	}
-
-	public void setListe(ArrayList<Tile> liste) {
-		this.touchedTiles = liste;
 	}
 
 	public HashMap<Integer, Entity> getEntities() {
