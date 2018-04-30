@@ -17,7 +17,7 @@ public class Tree extends Entity {
 	@Override
 	public String toString() {
 		return "Tree [toString()=" + super.toString() + ", getX()=" + getX() + ", getY()=" + getY() + ", getId()="
-				+ getId() + ", getHitbox()=" + getHitbox() + ", getHitBox()=" + getHitBox() + ", getSprite()="
+				+ getId() + ", getHitbox()=" + getHitbox() + ", getHitBox()=" + getHitbox() + ", getSprite()="
 				+ getSprite() + ", getVelocity()=" + getVelocity() + ", getSpeed()=" + getSpeed()
 				+ ", getTouchedTiles()=" + getTouchedTiles() + ", getClass()=" + getClass() + ", hashCode()="
 				+ hashCode() + "]";

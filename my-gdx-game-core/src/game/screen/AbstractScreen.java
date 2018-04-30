@@ -1,74 +1,77 @@
 package game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-public abstract class AbstractScreen extends Stage implements Screen, InputProcessor {
+import game.Application;
 
-	private AssetManager assetManager;
+public abstract class AbstractScreen implements Screen {
 
-	public AbstractScreen(AssetManager assetManager, float viewportWidth, float viewportHeight) {
-		super(new StretchViewport(viewportWidth, viewportHeight, new OrthographicCamera()));
-		this.assetManager = assetManager;
-		buildStage();
+	protected final Application app;
+	protected Stage stage;
+
+	public AbstractScreen(Application app) {
+		this.app = app;
+		this.stage = new Stage(new StretchViewport(Application.WIDTH/2, Application.HEIGHT/2, app.getCamera()));
+
 	}
-
-	// Subclasses load actors in this method
-	public abstract void buildStage();
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.6f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		super.act(delta);
-		super.draw();
+		stage.act();
+		stage.draw();
 	}
 
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(this);
+		Gdx.app.log(getClass().getName(), "show()");
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		super.getViewport().update(width, height, true);
+		Gdx.app.log(getClass().getName(), "resize()");
+		stage.getViewport().update(width, height);
 	}
 
 	@Override
 	public void hide() {
+		Gdx.app.log(getClass().getName(), "hide()");
 	}
 
 	@Override
 	public void pause() {
+		Gdx.app.log(getClass().getName(), "pause()");
 	}
 
 	@Override
 	public void resume() {
+		Gdx.app.log(getClass().getName(), "resume()");
 	}
 
 	@Override
 	public void dispose() {
-		super.dispose();
 
-		if (this instanceof GameScreen) {
-			this.assetManager.dispose();
-		}
+		Gdx.app.log(getClass().getName(), "dispose()");
 
 	}
 
-	public AssetManager getAssetManager() {
-		return assetManager;
+	public Application getApp() {
+		return app;
 	}
 
-	public void setAssetManager(AssetManager assetManager) {
-		this.assetManager = assetManager;
+	public Stage getStage() {
+		return stage;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
 	}
 
 }

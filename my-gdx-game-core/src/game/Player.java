@@ -1,13 +1,10 @@
 package game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Keys;
 
-import game.entity.Creature;
 import game.entity.Entity;
-import game.entity.EntityManager;
+import game.utility.EntityManager;
 
 public class Player implements InputProcessor {
 
@@ -23,28 +20,26 @@ public class Player implements InputProcessor {
 
 	}
 
-	public void update(EntityManager entityManager) {
+	public void update(float delta, EntityManager entityManager) {
 
 		if (entity == null) {
 			entity = entityManager.getEntities().get(currentEntityID);
 		}
 
-		
-		
 		if (pressed_left) {
-			entity.getVelocity().x = -entity.getSpeed() * Gdx.graphics.getDeltaTime();
+			entity.getVelocity().x = -entity.getSpeed() * delta;
 		}
 
 		if (pressed_right) {
-			entity.getVelocity().x = entity.getSpeed() * Gdx.graphics.getDeltaTime();
+			entity.getVelocity().x = entity.getSpeed() * delta;
 		}
 
 		if (pressed_down) {
-			entity.getVelocity().y = -entity.getSpeed() * Gdx.graphics.getDeltaTime();
+			entity.getVelocity().y = -entity.getSpeed() * delta;
 		}
 
 		if (pressed_up) {
-			entity.getVelocity().y = entity.getSpeed() * Gdx.graphics.getDeltaTime();
+			entity.getVelocity().y = entity.getSpeed() * delta;
 
 		}
 

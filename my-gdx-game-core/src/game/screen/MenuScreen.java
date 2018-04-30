@@ -1,33 +1,50 @@
 package game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import game.Game;
+import game.Application;
 
 public class MenuScreen extends AbstractScreen {
 
-	public MenuScreen(AssetManager assetManager) {
-		super(assetManager, 800f, 800f);
+	public MenuScreen(Application app) {
+		super(app);
+		app.getAssetManager().load("skin/metal-ui.json", Skin.class);
+		app.getAssetManager().finishLoading();
 	}
 
 	@Override
-	public void buildStage() {
+	public void render(float delta) {
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(0.6f, 0, 0, 1);
 
-		getAssetManager().load("skin/metal-ui.json", Skin.class);
-		getAssetManager().finishLoading();
+		stage.act(delta);
+		stage.draw();
+	}
 
-		Label header = new Label("Unkown", getAssetManager().get("skin/metal-ui.json", Skin.class));
+	@Override
+	public void show() {
+		super.show();
+		initMainMenu();
+
+	}
+
+	public void initMainMenu() {
+
+		Label header = new Label("Unkown", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
 		header.setColor(1, 1, 1, 1);
 		header.setFontScale(2f);
 
-		TextButton exit = new TextButton("Exit", getAssetManager().get("skin/metal-ui.json", Skin.class));
+		TextButton exit = new TextButton("Exit", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
 
 		exit.addListener(new ClickListener() {
 
@@ -40,34 +57,29 @@ public class MenuScreen extends AbstractScreen {
 
 		});
 
-		TextButton play = new TextButton("Play", getAssetManager().get("skin/metal-ui.json", Skin.class));
+		TextButton play = new TextButton("Play", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
 		play.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-
-				dispose();
-				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(getAssetManager()));
-
+				app.setScreen(app.getGameScreen());
 			}
 
 		});
 
-		TextButton settings = new TextButton("Settings", getAssetManager().get("skin/metal-ui.json", Skin.class));
+		TextButton settings = new TextButton("Settings", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
 		settings.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-
-				((Game) Gdx.app.getApplicationListener()).setScreen(new SettingsScreen(getAssetManager()));
-
+				stage.clear();
+				initSettings();
 			}
 
 		});
 
 		Table table = new Table();
 		table.setFillParent(true);
-		// table.debug();
 
 		table.add(header).pad(100, 300, 100, 300);
 		table.row();
@@ -76,7 +88,60 @@ public class MenuScreen extends AbstractScreen {
 		table.add(settings).padBottom(30);
 		table.row();
 		table.add(exit);
-		addActor(table);
+
+		stage.addActor(table);
+
+	}
+
+	public void initSettings() {
+
+		Label header = new Label("Settings", getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
+		header.setFontScale(1.5f);
+
+		TextButton back = new TextButton("Back", getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
+		back.addListener(new ClickListener() {
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+
+				stage.clear();
+				show();
+
+			}
+
+		});
+
+		CheckBox fullscreen = new CheckBox(" Fullscreen",
+				getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
+		fullscreen.addListener(new ClickListener() {
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+
+				if (!(Gdx.graphics.isFullscreen())) {
+					Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+				} else {
+
+					Gdx.graphics.setWindowedMode(1024, 768);
+				}
+
+			}
+
+		});
+
+		Table table = new Table();
+
+		table.setFillParent(true);
+		table.add(header).pad(100, 300, 100, 300);
+		table.row();
+		table.add(fullscreen).padBottom(30);
+		table.row();
+		table.add(back);
+
+		table.addAction(Actions.sequence(Actions.alpha(0),
+				Actions.parallel(Actions.fadeIn(0.5f), Actions.moveBy(0, -20, 0.5f, Interpolation.pow5Out))));
+
+		stage.addActor(table);
 
 	}
 

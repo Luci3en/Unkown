@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 
 import game.Map;
 import game.Tile;
 import game.World;
+import game.utility.EntityManager;
 import game.utility.Hitbox;
 
 public abstract class Entity {
@@ -40,7 +40,6 @@ public abstract class Entity {
 	public Entity(float x, float y, Hitbox hitbox, Sprite sprite, World world) {
 		this.id = Entity.ID;
 		Entity.ID++;
-	
 
 		this.x = x;
 		this.y = y;
@@ -58,10 +57,6 @@ public abstract class Entity {
 
 	}
 
-	
-	
-	
-	
 	@Override
 	public String toString() {
 		return "Entity [id=" + id + ", speed=" + speed + ", velocity=" + velocity + ", sprite=" + sprite + ", hitbox="
@@ -80,7 +75,7 @@ public abstract class Entity {
 
 	public boolean collision(Entity entity) {
 
-		if (Intersector.overlaps(hitbox.getHitbox(), entity.getHitBox().getHitbox())) {
+		if (Intersector.overlapConvexPolygons(hitbox.getPolygon(), entity.getHitbox().getPolygon())) {
 
 			return true;
 
@@ -92,9 +87,6 @@ public abstract class Entity {
 
 	}
 
-	public void renderHitbox(ShapeRenderer shapeRenderer) {
-		shapeRenderer.rect(hitbox.getX(), hitbox.getY(), hitbox.getHitbox().width, hitbox.getHitbox().height);
-	}
 
 	public float getX() {
 		return x;
@@ -137,14 +129,6 @@ public abstract class Entity {
 
 	public void setHitbox(Hitbox hitbox) {
 		this.hitbox = hitbox;
-	}
-
-	public Hitbox getHitBox() {
-		return hitbox;
-	}
-
-	public void setHitBox(Hitbox hitBox) {
-		this.hitbox = hitBox;
 	}
 
 	public Sprite getSprite() {

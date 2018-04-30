@@ -19,12 +19,12 @@ public class Weapon {
 	}
 
 	public void attack() {
-
+		
 		Vector2 mouse = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 
 	//	System.out.println(MathUtils.atan2(hitbox.getX(), hitbox.getY()) - MathUtils.atan2(mouse.x, mouse.y));
-		System.out.println(MathUtils.atan2(hitbox.getX() * mouse.y - hitbox.getY() * mouse.x,
-				hitbox.getX() * mouse.x + hitbox.getY() * mouse.y));
+//		System.out.println(MathUtils.atan2(hitbox.getX() * mouse.y - hitbox.getY() * mouse.x,
+//				hitbox.getX() * mouse.x + hitbox.getY() * mouse.y));
 
 		// direction = new Vector2((float) Math.cos(Math.toRadians(degrees)),
 		// (float) Math.sin(Math.toRadians(degrees)));

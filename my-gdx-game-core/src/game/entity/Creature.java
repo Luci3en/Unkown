@@ -7,49 +7,35 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import game.Map;
+import game.utility.EntityManager;
 import game.utility.Hitbox;
 
 public class Creature extends Entity {
 
-	private Animation<TextureRegion> animation, up_walking, down_walking, left_walking, right_walking;
+	private Animation<TextureRegion> currentAnimation, up_walking, down_walking, left_walking, right_walking;
 	private float stateTime;
 	private boolean moving;
-	private Inventory inventory;
 
 	public Creature(float x, float y) {
 		super(x, y, new Hitbox(x, y, 0, 0, 20, 15));
 
 		this.stateTime = 0;
 		this.moving = false;
-		this.inventory = new Inventory();
 
 		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("img/player_walking.atlas"));
 
-		animation = new Animation<TextureRegion>(1f / 8f, textureAtlas.findRegions("up_walking"));
-		up_walking = animation;
+		currentAnimation = new Animation<TextureRegion>(1f / 8f, textureAtlas.findRegions("up_walking"));
+		up_walking = currentAnimation;
 
-		animation = new Animation<TextureRegion>(1f / 8f, textureAtlas.findRegions("down_walking"));
-		down_walking = animation;
+		currentAnimation = new Animation<TextureRegion>(1f / 8f, textureAtlas.findRegions("down_walking"));
+		down_walking = currentAnimation;
 
-		animation = new Animation<TextureRegion>(1f / 10f, textureAtlas.findRegions("left_walking"));
-		left_walking = animation;
+		currentAnimation = new Animation<TextureRegion>(1f / 10f, textureAtlas.findRegions("left_walking"));
+		left_walking = currentAnimation;
 
-		animation = new Animation<TextureRegion>(1f / 10f, textureAtlas.findRegions("right_walking"));
-		right_walking = animation;
-		
-		
-		
-	}
+		currentAnimation = new Animation<TextureRegion>(1f / 10f, textureAtlas.findRegions("right_walking"));
+		right_walking = currentAnimation;
 
-	@Override
-	public String toString() {
-		return "Creature [animation=" + animation + ", up_walking=" + up_walking + ", down_walking=" + down_walking
-				+ ", left_walking=" + left_walking + ", right_walking=" + right_walking + ", stateTime=" + stateTime
-				+ ", moving=" + moving + ", toString()=" + super.toString() + ", getX()=" + getX() + ", getY()="
-				+ getY() + ", getId()=" + getId() + ", getHitbox()=" + getHitbox() + ", getHitBox()=" + getHitBox()
-				+ ", getSprite()=" + getSprite() + ", getVelocity()=" + getVelocity() + ", getSpeed()=" + getSpeed()
-				+ ", getTouchedTiles()=" + getTouchedTiles() + ", getClass()=" + getClass() + ", hashCode()="
-				+ hashCode() + "]";
 	}
 
 	@Override
@@ -58,16 +44,16 @@ public class Creature extends Entity {
 
 		update(Gdx.graphics.getDeltaTime(), entityManager, map);
 
-		if (animation != null) {
+		if (currentAnimation != null) {
 
-			TextureRegion currentFrame = (TextureRegion) animation.getKeyFrame(stateTime, true);
+			TextureRegion currentFrame = (TextureRegion) currentAnimation.getKeyFrame(stateTime, true);
 
 			if (isMoving()) {
 
 				spriteBatch.draw(currentFrame, super.getX(), super.getY());
 			} else {
 
-				TextureRegion[] currentFrames = animation.getKeyFrames();
+				TextureRegion[] currentFrames = currentAnimation.getKeyFrames();
 				spriteBatch.draw(currentFrames[0], super.getX(), super.getY());
 
 			}
@@ -82,19 +68,19 @@ public class Creature extends Entity {
 			move(entityManager, map);
 
 			if (super.getVelocity().x < 0) {
-				animation = left_walking;
+				currentAnimation = left_walking;
 			}
 
 			if (super.getVelocity().x > 0) {
-				animation = right_walking;
+				currentAnimation = right_walking;
 			}
 
 			if (super.getVelocity().y < 0) {
-				animation = down_walking;
+				currentAnimation = down_walking;
 			}
 
 			if (super.getVelocity().y > 0) {
-				animation = up_walking;
+				currentAnimation = up_walking;
 			}
 
 			super.getVelocity().set(0, 0);
@@ -102,38 +88,35 @@ public class Creature extends Entity {
 			moving = false;
 		}
 	}
-	
-	
-	
 
 	public void move(EntityManager entityManager, Map map) {
 
-		float old_tempX = super.getHitBox().getX();
-		float old_tempY = super.getHitBox().getY();
+		float old_tempX = super.getHitbox().getX();
+		float old_tempY = super.getHitbox().getY();
 
-		super.getHitBox().setX(super.getHitBox().getX() + super.getVelocity().x);
-		super.getHitBox().setY(super.getHitBox().getY() + super.getVelocity().y);
+		super.getHitbox().setX(super.getHitbox().getX() + super.getVelocity().x);
+		super.getHitbox().setY(super.getHitbox().getY() + super.getVelocity().y);
 		super.setX(getX() + super.getVelocity().x);
 		super.setY(getY() + super.getVelocity().y);
 
 		if (super.getVelocity().x != 0) {
-			super.setTouchedTiles(entityManager.findTiles(getHitBox(), map));
+			super.setTouchedTiles(entityManager.findTiles(getHitbox(), map));
 
 			if (entityManager.collidingWithEntity(this)) {
 
 				System.out.println("reset x");
-				super.getHitBox().setX(old_tempX);
+				super.getHitbox().setX(old_tempX);
 				super.setX(old_tempX);
 			}
 
 		}
 
 		if (super.getVelocity().y != 0) {
-			super.setTouchedTiles(entityManager.findTiles(getHitBox(), map));
+			super.setTouchedTiles(entityManager.findTiles(getHitbox(), map));
 			if (entityManager.collidingWithEntity(this)) {
 
 				System.out.println("reset y");
-				super.getHitBox().setY(old_tempY);
+				super.getHitbox().setY(old_tempY);
 				super.setY(old_tempY);
 			}
 		}
@@ -147,8 +130,5 @@ public class Creature extends Entity {
 	public void setMoving(boolean moving) {
 		this.moving = moving;
 	}
-
-
-	
 
 }

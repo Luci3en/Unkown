@@ -1,4 +1,4 @@
-package game.entity;
+package game.utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import game.Map;
 import game.Tile;
-import game.utility.Hitbox;
+import game.entity.Creature;
+import game.entity.Entity;
 
 public class EntityManager {
 
@@ -88,7 +89,7 @@ public class EntityManager {
 	public void debugRender(ShapeRenderer shapeRenderer) {
 
 		for (Entry<Integer, Entity> entity : entities.entrySet()) {
-			entity.getValue().renderHitbox(shapeRenderer);
+			entity.getValue().getHitbox().render(shapeRenderer);
 
 			for (int i = 0; i < entity.getValue().getTouchedTiles().size(); i++) {
 

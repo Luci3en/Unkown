@@ -1,25 +1,33 @@
 package game.utility;
 
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Polygon;
 
 import game.Map;
 
 public class Hitbox {
 
-	private Rectangle hitbox;
+	private Polygon polygon;
 	private float offsetX, offsetY;
 
 	public Hitbox(float x, float y, float offsetX, float offsetY, float width, float height) {
 		this.offsetX = offsetX;
+
 		this.offsetY = offsetY;
-		this.hitbox = new Rectangle(x + offsetX, y + offsetY, width, height);
-	
+		this.polygon = new Polygon(new float[] { 0, 0, 0, height, width, height, width, 0 });
+
+		this.polygon.setPosition(x, y);
+		this.polygon.setOrigin(x, y);
 
 	}
 
 	public void setX(float x) {
-		if (x >= 0 && x <= Map.MAP_PIXEL_WIDTH - hitbox.width) {
-			hitbox.x = x;
+		if (x >= 0 && x <= Map.MAP_PIXEL_WIDTH - getWidth()) {
+			polygon.setPosition(x, polygon.getY());
+			polygon.setOrigin(polygon.getX(), polygon.getY());
+			
+			
+
 		} else {
 			return;
 		}
@@ -28,36 +36,43 @@ public class Hitbox {
 
 	public void setY(float y) {
 
-		if (y >= 0 && y <= Map.MAP_PIXEL_HEIGHT - hitbox.height) {
-			hitbox.y = y;
+		if (y >= 0 && y <= Map.MAP_PIXEL_HEIGHT - getHeight()) {
+			polygon.setPosition(polygon.getX(), y);
+			polygon.setOrigin(polygon.getX(), polygon.getY());
 		} else {
 			return;
 		}
 
 	}
+	
+	public void render(ShapeRenderer shapeRenderer) {
+		shapeRenderer.polygon(polygon.getTransformedVertices());
+	}
+
+	
 
 	public float getWidth() {
-		return hitbox.getWidth();
+		return polygon.getBoundingRectangle().getWidth();
 	}
 
 	public float getHeight() {
-		return hitbox.getHeight();
+		return polygon.getBoundingRectangle().getHeight();
 	}
 
 	public float getX() {
-		return hitbox.getX();
+		return polygon.getOriginX();
 	}
 
 	public float getY() {
-		return hitbox.getY();
+		return polygon.getOriginY();
 	}
 
-	public Rectangle getHitbox() {
-		return hitbox;
+	public Polygon getPolygon() {
+		return polygon;
 	}
 
-	public void setHitbox(Rectangle hitbox) {
-		this.hitbox = hitbox;
+	public void Polygon(Polygon hitbox) {
+		this.polygon = hitbox;
 	}
 
 	public float getOffsetX() {
