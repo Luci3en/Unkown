@@ -15,7 +15,7 @@ public abstract class AbstractScreen implements Screen {
 
 	public AbstractScreen(Application app) {
 		this.app = app;
-		this.stage = new Stage(new StretchViewport(Application.WIDTH/2, Application.HEIGHT/2, app.getCamera()));
+		this.stage = new Stage(new StretchViewport(Application.WIDTH / 2, Application.HEIGHT / 2, app.getCamera()));
 
 	}
 

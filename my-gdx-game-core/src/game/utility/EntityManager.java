@@ -1,6 +1,8 @@
 package game.utility;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -15,15 +17,24 @@ import game.entity.Entity;
 public class EntityManager {
 
 	private HashMap<Integer, Entity> entities;
+	private ArrayList<Entity> renderOrder;
+	private Comparator<Entity> yOrder;
 
 	public EntityManager() {
 		this.entities = new HashMap<Integer, Entity>();
+		this.renderOrder = new ArrayList<Entity>();
+		this.yOrder = new Comparator<Entity>() {
+
+			@Override
+			public int compare(Entity o1, Entity o2) {
+				return Float.compare(o2.getY(), o1.getY());
+			}
+		};
 
 	}
 
 	public ArrayList<Tile> findTiles(Hitbox hitbox, Map map) {
 
-		// Buffer einbauen
 		ArrayList<Tile> touchedTiles = new ArrayList<Tile>();
 
 		int left = (int) (hitbox.getX() / Tile.TILE_PIXEL_WIDTH);
@@ -49,7 +60,7 @@ public class EntityManager {
 
 		for (Tile tile : entity.getTouchedTiles()) {
 
-			System.out.println(tile.getEntityIDs().toString());
+			 System.out.println(tile.getEntityIDs().toString());
 
 			for (int id : tile.getEntityIDs()) {
 				if (id != 0 && id != entity.getId()) {
@@ -72,14 +83,18 @@ public class EntityManager {
 
 	public void render(SpriteBatch spriteBatch, Map map) {
 
-		for (Entry<Integer, Entity> entity : entities.entrySet()) {
+		renderOrder.clear();
+		renderOrder.addAll(entities.values());
+		Collections.sort(renderOrder, yOrder);
 
-			if (entity.getValue() instanceof Creature) {
+		for (Entity entity : renderOrder) {
 
-				entity.getValue().render(spriteBatch, this, map);
+			if (entity instanceof Creature) {
+
+				entity.render(spriteBatch, this, map);
 			} else {
 
-				entity.getValue().render(spriteBatch);
+				entity.render(spriteBatch);
 			}
 
 		}

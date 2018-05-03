@@ -36,8 +36,21 @@ public class World {
 		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(map.getTiledMap());
 		this.entityManager = new EntityManager();
 
-		entityManager.getEntities().put(Entity.ID, new Tree(100, 100, this));
 
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				
+			 double temp = Math.random() * 100 + 80;
+			 
+			 System.out.println(temp);
+				
+				entityManager.getEntities().put(Entity.ID, new Tree(i*32 + (float)temp, j*32 + (float) temp, this));
+			}
+		}
+		
+		
+		
 		this.entityManager.getEntities().put(Entity.ID, new Creature(10, 10));
 
 		player.setCurrentEntityID(Entity.ID - 1);
@@ -59,7 +72,7 @@ public class World {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin();
 
-		entityManager.debugRender(shapeRenderer);
+	//	entityManager.debugRender(shapeRenderer);
 		shapeRenderer.end();
 
 	}

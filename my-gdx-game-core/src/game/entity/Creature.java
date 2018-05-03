@@ -40,9 +40,8 @@ public class Creature extends Entity {
 
 	@Override
 	public void render(SpriteBatch spriteBatch, EntityManager entityManager, Map map) {
-		stateTime += Gdx.graphics.getDeltaTime();
 
-		update(Gdx.graphics.getDeltaTime(), entityManager, map);
+		update(entityManager, map);
 
 		if (currentAnimation != null) {
 
@@ -51,7 +50,10 @@ public class Creature extends Entity {
 			if (isMoving()) {
 
 				spriteBatch.draw(currentFrame, super.getX(), super.getY());
-			} else {
+
+			}
+
+			else {
 
 				TextureRegion[] currentFrames = currentAnimation.getKeyFrames();
 				spriteBatch.draw(currentFrames[0], super.getX(), super.getY());
@@ -60,33 +62,38 @@ public class Creature extends Entity {
 		}
 	}
 
-	public void update(float delta, EntityManager entityManager, Map map) {
+	public void update(EntityManager entityManager, Map map) {
 
 		if (super.getVelocity().x != 0 || super.getVelocity().y != 0) {
+			stateTime += Gdx.graphics.getDeltaTime();
+			this.moving = true;
 
-			moving = true;
 			move(entityManager, map);
 
 			if (super.getVelocity().x < 0) {
 				currentAnimation = left_walking;
 			}
 
-			if (super.getVelocity().x > 0) {
+			else if (super.getVelocity().x > 0) {
 				currentAnimation = right_walking;
 			}
 
-			if (super.getVelocity().y < 0) {
+			else if (super.getVelocity().y < 0) {
 				currentAnimation = down_walking;
 			}
 
-			if (super.getVelocity().y > 0) {
+			else if (super.getVelocity().y > 0) {
 				currentAnimation = up_walking;
 			}
 
 			super.getVelocity().set(0, 0);
-		} else {
-			moving = false;
 		}
+
+		else {
+			this.moving = false;
+			return;
+		}
+
 	}
 
 	public void move(EntityManager entityManager, Map map) {

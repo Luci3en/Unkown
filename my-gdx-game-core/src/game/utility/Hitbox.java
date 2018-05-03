@@ -16,8 +16,8 @@ public class Hitbox {
 		this.offsetY = offsetY;
 		this.polygon = new Polygon(new float[] { 0, 0, 0, height, width, height, width, 0 });
 
-		this.polygon.setPosition(x, y);
-		this.polygon.setOrigin(x, y);
+		this.polygon.setPosition(x + offsetX, y + offsetY);
+		this.polygon.setOrigin(x + offsetX, y + offsetY);
 
 	}
 

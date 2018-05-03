@@ -87,7 +87,6 @@ public abstract class Entity {
 
 	}
 
-
 	public float getX() {
 		return x;
 	}
