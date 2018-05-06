@@ -50,23 +50,20 @@ public class Player implements InputProcessor {
 
 		switch (keyCode) {
 		case Input.Keys.UP:
-
-			pressed_up = true;
+			setPressed_up(true);
 			break;
 
 		case Input.Keys.DOWN:
-			pressed_down = true;
+			setPressed_down(true);
 			break;
 
 		case Input.Keys.LEFT:
-			pressed_left = true;
+			setPressed_left(true);
 			break;
 
 		case Input.Keys.RIGHT:
-			pressed_right = true;
+			setPressed_right(true);
 			break;
-
-		case Input.Keys.I:
 
 		default:
 
@@ -86,19 +83,19 @@ public class Player implements InputProcessor {
 	public boolean keyUp(int keyCode) {
 		switch (keyCode) {
 		case Input.Keys.UP:
-			pressed_up = false;
+			setPressed_up(false);
 			break;
 
 		case Input.Keys.DOWN:
-			pressed_down = false;
+			setPressed_down(false);
 			break;
 
 		case Input.Keys.LEFT:
-			pressed_left = false;
+			setPressed_left(false);
 			break;
 
 		case Input.Keys.RIGHT:
-			pressed_right = false;
+			setPressed_right(false);
 			break;
 
 		default:

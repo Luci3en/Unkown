@@ -10,7 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import game.Application;
 
@@ -34,12 +36,12 @@ public class MenuScreen extends AbstractScreen {
 	@Override
 	public void show() {
 		super.show();
-		initMainMenu();
+		showMainMenu();
 
 	}
 
-	public void initMainMenu() {
-
+	public void showMainMenu() {
+		stage.clear();
 		Label header = new Label("Unkown", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
 		header.setColor(1, 1, 1, 1);
 		header.setFontScale(2f);
@@ -72,8 +74,7 @@ public class MenuScreen extends AbstractScreen {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				stage.clear();
-				initSettings();
+			showSettings();
 			}
 
 		});
@@ -81,6 +82,9 @@ public class MenuScreen extends AbstractScreen {
 		Table table = new Table();
 		table.setFillParent(true);
 
+		table.addAction(Actions.sequence(Actions.alpha(0),
+				Actions.parallel(Actions.fadeIn(0.5f), Actions.moveBy(0, -20, 0.5f, Interpolation.pow5Out))));
+		
 		table.add(header).pad(100, 300, 100, 300);
 		table.row();
 		table.add(play).padBottom(30);
@@ -93,8 +97,8 @@ public class MenuScreen extends AbstractScreen {
 
 	}
 
-	public void initSettings() {
-
+	public void showSettings() {
+		stage.clear();
 		Label header = new Label("Settings", getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
 		header.setFontScale(1.5f);
 
@@ -111,8 +115,20 @@ public class MenuScreen extends AbstractScreen {
 
 		});
 
+	
+
+		
+		
+		
 		CheckBox fullscreen = new CheckBox(" Fullscreen",
 				getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
+		
+		if (Gdx.graphics.isFullscreen()) {
+
+			fullscreen.setChecked(true);
+
+		}	
+		
 		fullscreen.addListener(new ClickListener() {
 
 			@Override
