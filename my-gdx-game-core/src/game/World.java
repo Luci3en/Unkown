@@ -1,5 +1,6 @@
 package game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -27,6 +28,7 @@ public class World {
 
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setAutoShapeType(true);
+		this.shapeRenderer.setColor(Color.RED);
 		this.camera = new OrthographicCamera();
 		this.viewport = new StretchViewport(Application.WIDTH / 2, Application.HEIGHT / 2, camera);
 		this.viewport.setCamera(camera);
@@ -36,29 +38,16 @@ public class World {
 		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(map.getTiledMap());
 		this.entityManager = new EntityManager();
 
+		entityManager.getEntities().put(Entity.ID, new Tree(50, 20, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(80, 20, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(100, 20, this));
 
-
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-				
-			 double temp = Math.random() * 100 + 80;
-			 
-			 System.out.println(temp);
-				
-				entityManager.getEntities().put(Entity.ID, new Tree(i*32 + (float)temp, j*32 + (float) temp, this));
-			}
-		}
-		
-		
-		
 		this.entityManager.getEntities().put(Entity.ID, new Creature(10, 10));
-
 		player.setCurrentEntityID(Entity.ID - 1);
-
+		player.setEntity(entityManager.getEntities().get(player.getCurrentEntityID()));
 	}
 
 	public void render(SpriteBatch spriteBatch) {
-
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
@@ -72,9 +61,26 @@ public class World {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin();
 
-	//	entityManager.debugRender(shapeRenderer);
+	
+		entityManager.debugRender(shapeRenderer);
 		shapeRenderer.end();
 
+	}
+
+	public Viewport getViewport() {
+		return viewport;
+	}
+
+	public void setViewport(Viewport viewport) {
+		this.viewport = viewport;
+	}
+
+	public OrthographicCamera getCamera() {
+		return camera;
+	}
+
+	public void setCamera(OrthographicCamera camera) {
+		this.camera = camera;
 	}
 
 	public void update(Player player) {

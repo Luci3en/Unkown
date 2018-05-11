@@ -15,14 +15,15 @@ public class Creature extends Entity {
 	private Animation<TextureRegion> currentAnimation, up_walking, down_walking, left_walking, right_walking;
 	private float stateTime;
 	private boolean moving;
+	private Weapon weapon;
 
 	public Creature(float x, float y) {
 		super(x, y, new Hitbox(x, y, 0, 0, 20, 15));
-
+		this.weapon = new Weapon(x, y);
 		this.stateTime = 0;
 		this.moving = false;
 
-		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("img/player_walking.atlas"));
+		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("atlas/player_walking.atlas"));
 
 		currentAnimation = new Animation<TextureRegion>(1f / 8f, textureAtlas.findRegions("up_walking"));
 		up_walking = currentAnimation;
@@ -128,6 +129,14 @@ public class Creature extends Entity {
 			}
 		}
 
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
+	public void setWeapon(Weapon weapon) {
+		this.weapon = weapon;
 	}
 
 	public boolean isMoving() {

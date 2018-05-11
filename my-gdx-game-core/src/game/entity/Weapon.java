@@ -1,41 +1,54 @@
 package game.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import game.utility.Hitbox;
 
-public class Weapon {
-
-	private float x, y;
-	private Hitbox hitbox;
-	private Sprite sprite;
+public class Weapon extends Entity {
 
 	public Weapon(float x, float y) {
-
-		this.hitbox = new Hitbox(x, y, 0, 0, 50, 50);
+		super(x, y);
+		super.setHitbox(new Hitbox(x, y, 0, 0, 20, 20));
 	}
 
-	public void attack() {
-		
-		Vector2 mouse = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+	public void attack(Camera camera) {
+		Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
 
-	//	System.out.println(MathUtils.atan2(hitbox.getX(), hitbox.getY()) - MathUtils.atan2(mouse.x, mouse.y));
-//		System.out.println(MathUtils.atan2(hitbox.getX() * mouse.y - hitbox.getY() * mouse.x,
-//				hitbox.getX() * mouse.x + hitbox.getY() * mouse.y));
+		camera.unproject(mouse);
 
-		// direction = new Vector2((float) Math.cos(Math.toRadians(degrees)),
-		// (float) Math.sin(Math.toRadians(degrees)));
+		double angle = Math.atan2(mouse.y - super.getHitbox().getY(), mouse.x - super.getHitbox().getX()) * 180
+				/ Math.PI;
 
-		for (int i = 0; i < 40; i++) {
-			if (i < 19)
-				x += 2;
-			else
-				x -= 2;
-		}
+getHitbox().getPolygon().setVertices(rotate(getHitbox().getPolygon().getTransformedVertices(),(float) angle, new Vector2(super.getX(), super.getY())));
+
 	}
+
+	//
+	// Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+	// game.getStage().getCamera().unproject(mouse);
+	// origin.set(position.getX() + offsetX, position.getY() + 15);
+	//
+	// degrees = ((float) ((Math.atan2(mouse.x - origin.getX(), -(mouse.y -
+	// origin.getY())) * 180.0d
+	// / Math.PI)) - 90);
+	// if (degrees < 0)
+	// degrees = 360 + degrees;
+	//
+	// direction = new Vector((float) Math.cos(Math.toRadians(degrees)),
+	// (float) Math.sin(Math.toRadians(degrees)));
+	//
+	// hitbox.setVertices(rotate(hitbox.getVertices(), degrees - 90, new Vector(0,
+	// 0)));
+	// float[] or = rotate(new float[] { hitbox.getOriginX(), hitbox.getOriginY() },
+	// degrees - 90,
+	// new Vector(hitbox.getOriginX() + 1, hitbox.getOriginY() - 12));
+	// hitbox.setOrigin(or[0], or[1]);
+	// hitbox.setPosition(hitbox.getOriginX(), hitbox.getOriginY());
+	//
 
 	public float[] rotate(float[] _vertices, float rotation, Vector2 rotdot) {
 
@@ -60,6 +73,25 @@ public class Weapon {
 		}
 		return vertices;
 
+	}
+
+	public Vector2 rotate(float originX, float originY, float rotationX, float rotationY, float angle) {
+		float s = MathUtils.cosDeg(angle);
+		float c = MathUtils.sinDeg(angle);
+
+		// translate point back to origin:
+		originX -= rotationX;
+		originY -= rotationY;
+
+		// rotate point
+		float xnew = originX * c - originY * s;
+		float ynew = originX * s + originY * c;
+
+		// translate point back:
+		originX = xnew + rotationX;
+		originY = ynew + rotationY;
+
+		return new Vector2(originX, originY);
 	}
 
 }

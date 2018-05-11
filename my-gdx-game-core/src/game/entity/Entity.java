@@ -25,35 +25,33 @@ public abstract class Entity {
 	private ArrayList<Tile> touchedTiles;
 	private float x, y;
 
+	public Entity(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
 	public Entity(float x, float y, Hitbox hitbox) {
 		this.id = Entity.ID;
 		Entity.ID++;
 		this.x = x;
 		this.y = y;
-		this.sprite = null;
 		this.hitbox = hitbox;
 		this.touchedTiles = new ArrayList<Tile>();
 		this.velocity = new Vector2();
 
 	}
 
-	public Entity(float x, float y, Hitbox hitbox, Sprite sprite, World world) {
+	public Entity(float x, float y, Hitbox hitbox, World world) {
 		this.id = Entity.ID;
 		Entity.ID++;
 
 		this.x = x;
 		this.y = y;
-		this.sprite = sprite;
-		this.sprite.setX(getX());
-		this.sprite.setY(getY());
 		this.hitbox = hitbox;
 		this.touchedTiles = new ArrayList<Tile>();
 		this.velocity = new Vector2();
-		this.touchedTiles = world.getEntityManager().findTiles(hitbox, world.getMap());
-
-		for (Tile tile : touchedTiles) {
-			world.getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().add(id);
-		}
+//		this.touchedTiles = world.getEntityManager().findTiles(hitbox, world.getMap());
+//		setWorldTiles(world);
 
 	}
 
@@ -85,6 +83,13 @@ public abstract class Entity {
 
 		}
 
+	}
+
+	public void setWorldTiles(World world) {
+
+		for (Tile tile : touchedTiles) {
+			world.getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().add(id);
+		}
 	}
 
 	public float getX() {

@@ -74,7 +74,7 @@ public class MenuScreen extends AbstractScreen {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-			showSettings();
+				showSettings();
 			}
 
 		});
@@ -84,7 +84,7 @@ public class MenuScreen extends AbstractScreen {
 
 		table.addAction(Actions.sequence(Actions.alpha(0),
 				Actions.parallel(Actions.fadeIn(0.5f), Actions.moveBy(0, -20, 0.5f, Interpolation.pow5Out))));
-		
+
 		table.add(header).pad(100, 300, 100, 300);
 		table.row();
 		table.add(play).padBottom(30);
@@ -115,20 +115,15 @@ public class MenuScreen extends AbstractScreen {
 
 		});
 
-	
-
-		
-		
-		
 		CheckBox fullscreen = new CheckBox(" Fullscreen",
 				getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
-		
+
 		if (Gdx.graphics.isFullscreen()) {
 
 			fullscreen.setChecked(true);
 
-		}	
-		
+		}
+
 		fullscreen.addListener(new ClickListener() {
 
 			@Override

@@ -60,7 +60,7 @@ public class EntityManager {
 
 		for (Tile tile : entity.getTouchedTiles()) {
 
-			 System.out.println(tile.getEntityIDs().toString());
+			System.out.println(tile.getEntityIDs().toString());
 
 			for (int id : tile.getEntityIDs()) {
 				if (id != 0 && id != entity.getId()) {
@@ -104,12 +104,21 @@ public class EntityManager {
 	public void debugRender(ShapeRenderer shapeRenderer) {
 
 		for (Entry<Integer, Entity> entity : entities.entrySet()) {
+
+			if (entity.getValue() instanceof Creature) {
+
+				Creature creature = (Creature) entity.getValue();
+				creature.getWeapon().getHitbox().render(shapeRenderer);
+
+			}
+
 			entity.getValue().getHitbox().render(shapeRenderer);
 
 			for (int i = 0; i < entity.getValue().getTouchedTiles().size(); i++) {
 
 				shapeRenderer.rect(entity.getValue().getTouchedTiles().get(i).getX() * 32,
 						entity.getValue().getTouchedTiles().get(i).getY() * 32, 32, 32);
+
 			}
 
 		}

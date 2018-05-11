@@ -1,0 +1,27 @@
+
+Trees.png
+size: 128,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Trees1
+  rotate: false
+  xy: 2, 110
+  size: 61, 139
+  orig: 61, 139
+  offset: 0, 0
+  index: -1
+Trees2
+  rotate: false
+  xy: 65, 116
+  size: 57, 133
+  orig: 57, 133
+  offset: 0, 0
+  index: -1
+Trees3
+  rotate: false
+  xy: 2, 2
+  size: 48, 106
+  orig: 48, 106
+  offset: 0, 0
+  index: -1

@@ -15,6 +15,7 @@ public class Application extends Game {
 	public final static String TITEL = "Unknown";
 	public final static int WIDTH = 1024;
 	public final static int HEIGHT = 768;
+	public final static float VERSION = 0.01f;
 
 	private OrthographicCamera camera;
 	private SpriteBatch spriteBatch;

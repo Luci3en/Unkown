@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -27,6 +28,7 @@ public class GameScreen extends AbstractScreen {
 		super(app);
 		this.player = new Player();
 		this.world = new World(player);
+
 	}
 
 	@Override
@@ -51,7 +53,17 @@ public class GameScreen extends AbstractScreen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		update();
 
+		player.update(delta, world.getEntityManager(), world.getCamera());
+		world.update(player);
+		stage.act(delta);
+
+		world.render(app.getSpriteBatch());
+		stage.draw();
+	}
+
+	public void update() {
 		// Label temp = (Label) stage.getActors().get(0);
 		// temp.setText("Fps: " + Gdx.graphics.getFramesPerSecond());
 
@@ -64,13 +76,6 @@ public class GameScreen extends AbstractScreen {
 			}
 
 		}
-
-		player.update(delta, world.getEntityManager());
-		world.update(player);
-		stage.act(delta);
-
-		world.render(app.getSpriteBatch());
-		stage.draw();
 	}
 
 	@Override

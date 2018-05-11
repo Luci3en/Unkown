@@ -8,12 +8,8 @@ import game.Map;
 public class Hitbox {
 
 	private Polygon polygon;
-	private float offsetX, offsetY;
 
 	public Hitbox(float x, float y, float offsetX, float offsetY, float width, float height) {
-		this.offsetX = offsetX;
-
-		this.offsetY = offsetY;
 		this.polygon = new Polygon(new float[] { 0, 0, 0, height, width, height, width, 0 });
 
 		this.polygon.setPosition(x + offsetX, y + offsetY);
@@ -21,12 +17,17 @@ public class Hitbox {
 
 	}
 
+	public void translate(float offsetX, float offsetY) {
+		setX(getX() + offsetX);
+		setY(getY() + offsetY);
+
+	}
+
+	
 	public void setX(float x) {
 		if (x >= 0 && x <= Map.MAP_PIXEL_WIDTH - getWidth()) {
 			polygon.setPosition(x, polygon.getY());
 			polygon.setOrigin(polygon.getX(), polygon.getY());
-			
-			
 
 		} else {
 			return;
@@ -44,12 +45,12 @@ public class Hitbox {
 		}
 
 	}
-	
+
 	public void render(ShapeRenderer shapeRenderer) {
 		shapeRenderer.polygon(polygon.getTransformedVertices());
-	}
+		shapeRenderer.circle(polygon.getBoundingRectangle().getX(), polygon.getBoundingRectangle().getY(), 2);
 
-	
+	}
 
 	public float getWidth() {
 		return polygon.getBoundingRectangle().getWidth();
@@ -73,22 +74,6 @@ public class Hitbox {
 
 	public void Polygon(Polygon hitbox) {
 		this.polygon = hitbox;
-	}
-
-	public float getOffsetX() {
-		return offsetX;
-	}
-
-	public void setOffsetX(float offsetX) {
-		this.offsetX = offsetX;
-	}
-
-	public float getOffsetY() {
-		return offsetY;
-	}
-
-	public void setOffsetY(float offsetY) {
-		this.offsetY = offsetY;
 	}
 
 }

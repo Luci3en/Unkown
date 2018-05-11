@@ -1,8 +1,11 @@
 package game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Camera;
 
+import game.entity.Creature;
 import game.entity.Entity;
 import game.utility.EntityManager;
 
@@ -20,10 +23,12 @@ public class Player implements InputProcessor {
 
 	}
 
-	public void update(float delta, EntityManager entityManager) {
+	public void update(float delta, EntityManager entityManager, Camera camera) {
 
-		if (entity == null) {
-			entity = entityManager.getEntities().get(currentEntityID);
+		if (Gdx.input.isTouched(Input.Buttons.LEFT)) {
+
+			((Creature) entityManager.getEntities().get(currentEntityID)).getWeapon().attack(camera);
+
 		}
 
 		if (pressed_left) {
@@ -174,6 +179,14 @@ public class Player implements InputProcessor {
 
 	public void setCurrentEntityID(int currentEntityID) {
 		this.currentEntityID = currentEntityID;
+	}
+
+	public Entity getEntity() {
+		return entity;
+	}
+
+	public void setEntity(Entity entity) {
+		this.entity = entity;
 	}
 
 }
