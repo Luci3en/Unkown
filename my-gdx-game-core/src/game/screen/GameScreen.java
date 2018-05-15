@@ -1,10 +1,9 @@
 package game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -16,17 +15,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import game.Application;
-import game.Player;
+import game.Controller;
 import game.World;
 
 public class GameScreen extends AbstractScreen {
 
 	private World world;
-	private Player player;
+	private Controller player;
 
 	public GameScreen(Application app) {
 		super(app);
-		this.player = new Player();
+		this.player = new Controller();
 		this.world = new World(player);
 
 	}
@@ -38,14 +37,6 @@ public class GameScreen extends AbstractScreen {
 		inputMultiplexer.addProcessor(player);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
-
-		// Label header = new Label("FPS: ",
-		// app.getAssetManager().get("skin/metal-ui.json", Skin.class));
-		// header.setName("label");
-		// header.setColor(0, 0, 0, 1);
-		// header.setFontScale(2f);
-		// header.setPosition(4, stage.getViewport().getWorldHeight() - 20);
-		// stage.addActor(header);
 
 	}
 
@@ -64,8 +55,6 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	public void update() {
-		// Label temp = (Label) stage.getActors().get(0);
-		// temp.setText("Fps: " + Gdx.graphics.getFramesPerSecond());
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 

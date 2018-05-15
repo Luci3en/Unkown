@@ -15,7 +15,7 @@ public class Application extends Game {
 	public final static String TITEL = "Unknown";
 	public final static int WIDTH = 1024;
 	public final static int HEIGHT = 768;
-	public final static float VERSION = 0.01f;
+	public final static float VERSION = 0.0101f;
 
 	private OrthographicCamera camera;
 	private SpriteBatch spriteBatch;
@@ -37,7 +37,7 @@ public class Application extends Game {
 		this.menuScreen = new MenuScreen(this);
 		this.gameScreen = new GameScreen(this);
 
-		super.setScreen(menuScreen);
+		super.setScreen(gameScreen);
 
 	}
 

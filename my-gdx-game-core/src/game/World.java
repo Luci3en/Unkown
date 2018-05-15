@@ -24,27 +24,28 @@ public class World {
 	private EntityManager entityManager;
 	private Map map;
 
-	public World(Player player) {
+	public World(Controller player) {
 
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setAutoShapeType(true);
 		this.shapeRenderer.setColor(Color.RED);
 		this.camera = new OrthographicCamera();
-		this.viewport = new StretchViewport(Application.WIDTH / 2, Application.HEIGHT / 2, camera);
+		this.viewport = new StretchViewport(CameraStyles.WORLD_VIEWPORT_WIDTH, CameraStyles.WORLD_VIEWPORT_HEIGHT,
+				camera);
 		this.viewport.setCamera(camera);
 		this.viewport.apply();
 
 		this.map = new Map(35, 35);
 		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(map.getTiledMap());
-		this.entityManager = new EntityManager();
+		this.entityManager = new EntityManager(map);
 
 		entityManager.getEntities().put(Entity.ID, new Tree(50, 20, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(80, 20, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(100, 20, this));
 
-		this.entityManager.getEntities().put(Entity.ID, new Creature(10, 10));
+		this.entityManager.getEntities().put(Entity.ID, new Creature(100, 100));
 		player.setCurrentEntityID(Entity.ID - 1);
-		player.setEntity(entityManager.getEntities().get(player.getCurrentEntityID()));
+		player.setCreature((Creature) entityManager.getEntities().get(player.getCurrentEntityID()));
 	}
 
 	public void render(SpriteBatch spriteBatch) {
@@ -61,7 +62,6 @@ public class World {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin();
 
-	
 		entityManager.debugRender(shapeRenderer);
 		shapeRenderer.end();
 
@@ -83,7 +83,7 @@ public class World {
 		this.camera = camera;
 	}
 
-	public void update(Player player) {
+	public void update(Controller player) {
 		CameraStyles.lockOnEntity(camera, entityManager.getEntities().get(player.getCurrentEntityID()));
 	}
 
