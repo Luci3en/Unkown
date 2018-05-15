@@ -1,7 +1,6 @@
 package game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Interpolation;
@@ -21,12 +20,13 @@ import game.World;
 public class GameScreen extends AbstractScreen {
 
 	private World world;
-	private Controller player;
+	private Controller controller;
 
 	public GameScreen(Application app) {
 		super(app);
-		this.player = new Controller();
-		this.world = new World(player);
+
+		this.world = new World();
+		this.controller = new Controller(this);
 
 	}
 
@@ -34,7 +34,7 @@ public class GameScreen extends AbstractScreen {
 	public void show() {
 		stage.clear();
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
-		inputMultiplexer.addProcessor(player);
+		inputMultiplexer.addProcessor(controller);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 
@@ -44,27 +44,12 @@ public class GameScreen extends AbstractScreen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		update();
 
-		player.update(delta, world.getEntityManager(), world.getCamera());
-		world.update(player);
+		controller.update(delta);
 		stage.act(delta);
 
 		world.render(app.getSpriteBatch());
 		stage.draw();
-	}
-
-	public void update() {
-
-		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-
-			if (stage.getActors().size > 0) {
-				stage.clear();
-			} else {
-				showGameMenu();
-			}
-
-		}
 	}
 
 	@Override
@@ -182,6 +167,22 @@ public class GameScreen extends AbstractScreen {
 
 		stage.addActor(table);
 
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+
+	public Controller getController() {
+		return controller;
+	}
+
+	public void setController(Controller controller) {
+		this.controller = controller;
 	}
 
 }

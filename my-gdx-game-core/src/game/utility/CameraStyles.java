@@ -1,6 +1,7 @@
 package game.utility;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 
 import game.Application;
@@ -14,6 +15,8 @@ public class CameraStyles {
 
 	public static void lockOnEntity(Camera camera, Entity entity) {
 
+		// Es gibt eine camera.lookat() methode testen...
+
 		camera.position.x = entity.getX();
 
 		camera.position.x = MathUtils.clamp(camera.position.x, camera.viewportWidth / 2,
@@ -25,6 +28,22 @@ public class CameraStyles {
 				Map.MAP_PIXEL_HEIGHT - (camera.viewportHeight / 2));
 
 		camera.update();
+
+	}
+
+	public static void zoomCamera(OrthographicCamera camera) {
+
+		camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 100 / camera.viewportWidth);
+
+		float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
+		float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
+
+		camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f,
+				100 - effectiveViewportWidth / 2f);
+		camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f,
+				100 - effectiveViewportHeight / 2f);
+
+		return;
 
 	}
 

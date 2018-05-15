@@ -25,7 +25,7 @@ public class Weapon {
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 
-			polygon.update();
+			polygon.rotate(-1.8f * 10);
 
 		}
 

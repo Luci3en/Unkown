@@ -1,6 +1,5 @@
 package game;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -8,7 +7,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import game.entity.Creature;
 import game.entity.Entity;
 import game.entity.Tree;
 import game.utility.CameraStyles;
@@ -24,11 +22,12 @@ public class World {
 	private EntityManager entityManager;
 	private Map map;
 
-	public World(Controller player) {
+	public World() {
+
+		// World braucht eine dispose() um die Sprites der ganzen Entitys frei zu geben
 
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setAutoShapeType(true);
-		this.shapeRenderer.setColor(Color.RED);
 		this.camera = new OrthographicCamera();
 		this.viewport = new StretchViewport(CameraStyles.WORLD_VIEWPORT_WIDTH, CameraStyles.WORLD_VIEWPORT_HEIGHT,
 				camera);
@@ -43,9 +42,10 @@ public class World {
 		entityManager.getEntities().put(Entity.ID, new Tree(80, 20, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(100, 20, this));
 
-		this.entityManager.getEntities().put(Entity.ID, new Creature(100, 100));
-		player.setCurrentEntityID(Entity.ID - 1);
-		player.setCreature((Creature) entityManager.getEntities().get(player.getCurrentEntityID()));
+		entityManager.getEntities().put(Entity.ID, new Tree(200, 20, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(300, 20, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(400, 20, this));
+
 	}
 
 	public void render(SpriteBatch spriteBatch) {
@@ -62,7 +62,7 @@ public class World {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin();
 
-		entityManager.debugRender(shapeRenderer);
+	//wwww	entityManager.debugRender(shapeRenderer);
 		shapeRenderer.end();
 
 	}
@@ -81,10 +81,6 @@ public class World {
 
 	public void setCamera(OrthographicCamera camera) {
 		this.camera = camera;
-	}
-
-	public void update(Controller player) {
-		CameraStyles.lockOnEntity(camera, entityManager.getEntities().get(player.getCurrentEntityID()));
 	}
 
 	public EntityManager getEntityManager() {

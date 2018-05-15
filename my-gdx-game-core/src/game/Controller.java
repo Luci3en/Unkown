@@ -2,26 +2,36 @@ package game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import game.entity.Creature;
-import game.utility.EntityManager;
+import game.entity.Entity;
+import game.screen.GameScreen;
+import game.utility.CameraStyles;
 
 public class Controller implements InputProcessor {
 
 	private boolean pressed_W, pressed_S, pressed_A, pressed_D;
 	private int currentEntityID;
 	private Creature creature;
+	private GameScreen gameScreen;
 
-	public Controller() {
+	public Controller(GameScreen gameScreen) {
+		this.gameScreen = gameScreen;
 		this.pressed_W = false;
 		this.pressed_S = false;
 		this.pressed_A = false;
 		this.pressed_D = false;
 
+		gameScreen.getWorld().getEntityManager().getEntities().put(Entity.ID, new Creature(100, 100));
+		setCurrentEntityID(Entity.ID - 1);
+		setCreature((Creature) gameScreen.getWorld().getEntityManager().getEntities().get(getCurrentEntityID()));
+
 	}
 
-	public void update(float delta, EntityManager entityManager, Camera camera) {
+	public void update(float delta) {
+
+		CameraStyles.lockOnEntity(gameScreen.getWorld().getCamera(), getCreature());
 
 		if (pressed_A) {
 			creature.getVelocity().x = -creature.getSpeed() * delta;
@@ -61,6 +71,14 @@ public class Controller implements InputProcessor {
 		case Input.Keys.D:
 			setPressed_D(true);
 			break;
+
+		case Input.Keys.ESCAPE:
+
+			if (gameScreen.getStage().getActors().size > 0) {
+				gameScreen.getStage().clear();
+			} else {
+				gameScreen.showGameMenu();
+			}
 
 		default:
 
@@ -110,9 +128,11 @@ public class Controller implements InputProcessor {
 	}
 
 	@Override
-	public boolean scrolled(int arg0) {
-		// TODO Auto-generated method stub
+	public boolean scrolled(int amount) {
+
+		((OrthographicCamera) gameScreen.getWorld().getCamera()).zoom += amount * 0.2f;
 		return false;
+
 	}
 
 	@Override
