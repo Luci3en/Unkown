@@ -38,12 +38,17 @@ public class World {
 		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(map.getTiledMap());
 		this.entityManager = new EntityManager(map);
 
-		entityManager.getEntities().put(Entity.ID, new Tree(50, 20, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(50, 40, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(80, 20, this));
-		entityManager.getEntities().put(Entity.ID, new Tree(100, 20, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(100, 60, this));
 
+		entityManager.getEntities().put(Entity.ID, new Tree(90, 180, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(61, 200, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(100, 190, this));
+		
+		
 		entityManager.getEntities().put(Entity.ID, new Tree(200, 20, this));
-		entityManager.getEntities().put(Entity.ID, new Tree(300, 20, this));
+		entityManager.getEntities().put(Entity.ID, new Tree(300, 80, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(400, 20, this));
 
 	}

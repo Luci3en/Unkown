@@ -45,11 +45,16 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		controller.update(delta);
-		stage.act(delta);
+		if (stage.getActors().size == 0) {
+			controller.update(delta);
+		} else {
+			stage.act(delta);
+
+		}
 
 		world.render(app.getSpriteBatch());
 		stage.draw();
+
 	}
 
 	@Override
@@ -59,11 +64,11 @@ public class GameScreen extends AbstractScreen {
 
 	public void showGameMenu() {
 		stage.clear();
-		Label header = new Label("Unkown", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
+		Label header = new Label("Unkown", app.getAssetManager().get("skin/uiskin.json", Skin.class));
 		header.setColor(1, 1, 1, 1);
 		header.setFontScale(2f);
 
-		TextButton exit = new TextButton("Exit", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
+		TextButton exit = new TextButton("Exit", app.getAssetManager().get("skin/uiskin.json", Skin.class));
 
 		exit.addListener(new ClickListener() {
 
@@ -74,7 +79,7 @@ public class GameScreen extends AbstractScreen {
 
 		});
 
-		TextButton resume = new TextButton("Resume", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
+		TextButton resume = new TextButton("Resume", app.getAssetManager().get("skin/uiskin.json", Skin.class));
 		resume.addListener(new ClickListener() {
 
 			@Override
@@ -84,7 +89,7 @@ public class GameScreen extends AbstractScreen {
 
 		});
 
-		TextButton settings = new TextButton("Settings", app.getAssetManager().get("skin/metal-ui.json", Skin.class));
+		TextButton settings = new TextButton("Settings", app.getAssetManager().get("skin/uiskin.json", Skin.class));
 		settings.addListener(new ClickListener() {
 
 			@Override
@@ -102,21 +107,21 @@ public class GameScreen extends AbstractScreen {
 
 		table.add(header).pad(100, 300, 100, 300);
 		table.row();
-		table.add(resume).padBottom(30);
+		table.add(resume).padBottom(30).width(85);
 		table.row();
-		table.add(settings).padBottom(30);
+		table.add(settings).padBottom(30).width(85);
 		table.row();
-		table.add(exit);
+		table.add(exit).width(85);
 
 		stage.addActor(table);
 	}
 
 	public void showSettings() {
 		stage.clear();
-		Label header = new Label("Settings", getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
+		Label header = new Label("Settings", getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
 		header.setFontScale(1.5f);
 
-		TextButton back = new TextButton("Back", getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
+		TextButton back = new TextButton("Back", getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
 		back.addListener(new ClickListener() {
 
 			@Override
@@ -129,7 +134,7 @@ public class GameScreen extends AbstractScreen {
 		});
 
 		CheckBox fullscreen = new CheckBox(" Fullscreen",
-				getApp().getAssetManager().get("skin/metal-ui.json", Skin.class));
+				getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
 
 		if (Gdx.graphics.isFullscreen()) {
 
@@ -160,7 +165,7 @@ public class GameScreen extends AbstractScreen {
 		table.row();
 		table.add(fullscreen).padBottom(30);
 		table.row();
-		table.add(back);
+		table.add(back).width(85);
 
 		table.addAction(Actions.sequence(Actions.alpha(0),
 				Actions.parallel(Actions.fadeIn(0.5f), Actions.moveBy(0, -20, 0.5f, Interpolation.pow5Out))));
