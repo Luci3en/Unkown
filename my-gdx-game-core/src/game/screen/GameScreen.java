@@ -65,8 +65,7 @@ public class GameScreen extends AbstractScreen {
 	public void showGameMenu() {
 		stage.clear();
 		Label header = new Label("Unkown", app.getAssetManager().get("skin/uiskin.json", Skin.class));
-		header.setColor(1, 1, 1, 1);
-		header.setFontScale(2f);
+		header.setFontScale(1.5f);
 
 		TextButton exit = new TextButton("Exit", app.getAssetManager().get("skin/uiskin.json", Skin.class));
 

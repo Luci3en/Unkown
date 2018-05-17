@@ -89,6 +89,8 @@ public abstract class Entity {
 
 	public void setX(float x) {
 		if (x >= 0 && x <= Map.MAP_PIXEL_WIDTH - boundingPolygon.getWidth()) {
+			
+			
 			this.x = x;
 		} else {
 			return;
@@ -102,7 +104,7 @@ public abstract class Entity {
 
 	public void setY(float y) {
 
-		if (y >= 0 && y <= Map.MAP_PIXEL_HEIGHT - boundingPolygon.getWidth()) {
+		if (y >= 0 && y <= Map.MAP_PIXEL_HEIGHT - boundingPolygon.getHeight()) {
 			this.y = y;
 		} else {
 			return;

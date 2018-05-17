@@ -10,9 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import game.Application;
 
@@ -22,6 +20,7 @@ public class MenuScreen extends AbstractScreen {
 		super(app);
 		app.getAssetManager().load("skin/uiskin.json", Skin.class);
 		app.getAssetManager().finishLoading();
+
 	}
 
 	@Override
@@ -60,7 +59,7 @@ public class MenuScreen extends AbstractScreen {
 		});
 
 		TextButton play = new TextButton("Play", app.getAssetManager().get("skin/uiskin.json", Skin.class));
-		
+
 		play.addListener(new ClickListener() {
 
 			@Override

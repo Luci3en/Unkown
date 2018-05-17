@@ -37,7 +37,7 @@ public class Application extends Game {
 		this.menuScreen = new MenuScreen(this);
 		this.gameScreen = new GameScreen(this);
 
-		super.setScreen(gameScreen);
+		super.setScreen(menuScreen);
 
 	}
 

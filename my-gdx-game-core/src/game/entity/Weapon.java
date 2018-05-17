@@ -22,6 +22,7 @@ public class Weapon {
 	public void update(float x, float y) {
 
 		polygon.setPosition(x, y);
+		polygon.setOrigin(0, 0);
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 

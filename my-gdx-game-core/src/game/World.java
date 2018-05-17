@@ -45,8 +45,7 @@ public class World {
 		entityManager.getEntities().put(Entity.ID, new Tree(90, 180, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(61, 200, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(100, 190, this));
-		
-		
+
 		entityManager.getEntities().put(Entity.ID, new Tree(200, 20, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(300, 80, this));
 		entityManager.getEntities().put(Entity.ID, new Tree(400, 20, this));
@@ -67,7 +66,7 @@ public class World {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin();
 
-	//wwww	entityManager.debugRender(shapeRenderer);
+		entityManager.debugRender(shapeRenderer);
 		shapeRenderer.end();
 
 	}

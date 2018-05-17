@@ -17,22 +17,19 @@ public class Tree extends Entity {
 		int random = ((int) (Math.random() * 3) + 1);
 		String treeTexture = "Trees" + random;
 
-		float offsetX = 0;
-		float offsetY = 0;
-
 		switch (treeTexture) {
 		case "Trees1":
-			offsetX = 28;
+			getBoundingPolygon().setOffsetX(28f);
 
 			break;
 
 		case "Trees2":
-			offsetX = 24;
+			getBoundingPolygon().setOffsetX(24f);
 
 			break;
 
 		case "Trees3":
-			offsetX = 22;
+			getBoundingPolygon().setOffsetX(22f);
 
 			break;
 
@@ -40,7 +37,7 @@ public class Tree extends Entity {
 			break;
 		}
 
-		super.getBoundingPolygon().setPosition(getX() + offsetX, getY() + offsetY);
+		super.getBoundingPolygon().setPosition(getX(), getY());
 		super.setTouchedTiles(world.getEntityManager().findTiles(super.getBoundingPolygon()));
 		super.addEntityInWorld(world);
 

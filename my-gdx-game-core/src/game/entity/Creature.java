@@ -13,7 +13,7 @@ import game.utility.EntityManager;
 public class Creature extends Entity {
 
 	private Animation<TextureRegion> currentAnimation, up_walking, down_walking, left_walking, right_walking;
-	private float speed = 120;
+	private float speed = 240;
 	private float stateTime;
 	private boolean moving;
 	private Vector2 velocity;
@@ -21,7 +21,8 @@ public class Creature extends Entity {
 
 	public Creature(float x, float y) {
 		super(x, y, new BoundingPolygon(x, y, 20, 15));
-		this.weapon = new Weapon(200, 200);
+		getBoundingPolygon().setOffsetX(5f);
+		this.weapon = new Weapon(x + 20, y + 30);
 		this.stateTime = 0;
 		this.moving = false;
 		this.velocity = new Vector2();
@@ -66,6 +67,7 @@ public class Creature extends Entity {
 
 	@Override
 	public void update(EntityManager entityManager) {
+
 		weapon.update(super.getX() + 20, getY() + 30);
 
 		if (getVelocity().x != 0 || getVelocity().y != 0) {
@@ -107,14 +109,14 @@ public class Creature extends Entity {
 		super.getBoundingPolygon().setPosition(super.getX() + getVelocity().x, super.getY() + getVelocity().y);
 
 		super.setX(super.getX() + getVelocity().x);
-		super.setY(getY() + getVelocity().y);
+		super.setY(super.getY() + getVelocity().y);
 
 		if (getVelocity().x != 0) {
-			super.setTouchedTiles(entityManager.findTiles(getBoundingPolygon()));
+			super.setTouchedTiles(entityManager.findTiles(super.getBoundingPolygon()));
 
 			if (entityManager.collidingWithEntity(this)) {
 
-				super.getBoundingPolygon().setPosition(old_tempX, getY());
+				super.getBoundingPolygon().setPosition(old_tempX, super.getY());
 				super.setX(old_tempX);
 			}
 

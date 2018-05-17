@@ -89,8 +89,12 @@ public class EntityManager {
 
 		for (int i = left; i <= right; i++) {
 			for (int j = buttom; j <= top; j++) {
-
-				touchedTiles.add(map.getTile(i, j));
+				
+				if(i >= 0 && i < Map.MAP_WIDTH && j >= 0 && j < Map.MAP_HEIGHT) {
+					touchedTiles.add(map.getTile(i, j));
+				}
+				
+			
 
 			}
 		}

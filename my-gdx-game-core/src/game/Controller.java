@@ -1,11 +1,14 @@
 package game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import game.entity.Creature;
 import game.entity.Entity;
+import game.entity.Tree;
 import game.screen.GameScreen;
 import game.utility.CameraStyles;
 
@@ -48,6 +51,14 @@ public class Controller implements InputProcessor {
 		if (pressed_W) {
 			creature.getVelocity().y = creature.getSpeed() * delta;
 
+		}
+
+		if (Gdx.input.isKeyJustPressed(Keys.H)) {
+			int tempX = (int) (Math.random() * 500);
+			int tempY = (int) (Math.random() * 500);
+
+			gameScreen.getWorld().getEntityManager().getEntities().put(Entity.ID,
+					new Tree(tempX, tempY, gameScreen.getWorld()));
 		}
 
 	}
@@ -131,6 +142,7 @@ public class Controller implements InputProcessor {
 	public boolean scrolled(int amount) {
 
 		((OrthographicCamera) gameScreen.getWorld().getCamera()).zoom += amount * 0.2f;
+
 		return false;
 
 	}
