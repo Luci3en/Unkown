@@ -5,7 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import game.Application;
-https://www.youtube.com/watch?v=KAS9ZCLzf1s
+
 public class DesktopLauncher {
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
