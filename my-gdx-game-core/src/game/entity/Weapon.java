@@ -26,11 +26,16 @@ public class Weapon {
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 
-			polygon.rotate(-1.8f * 10);
+			
+					polygon.setRotation(0);
+
+				polygon.rotate(-1.8f * 2);
+
+				System.out.println(polygon.getRotation());
+			}
 
 		}
 
-	}
 
 	public void render(ShapeRenderer shapeRenderer) {
 

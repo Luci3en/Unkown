@@ -13,7 +13,7 @@ import game.utility.EntityManager;
 public class Creature extends Entity {
 
 	private Animation<TextureRegion> currentAnimation, up_walking, down_walking, left_walking, right_walking;
-	private float speed = 240;
+	private float speed = 120;
 	private float stateTime;
 	private boolean moving;
 	private Vector2 velocity;
@@ -105,31 +105,36 @@ public class Creature extends Entity {
 
 		float old_tempX = super.getX();
 		float old_tempY = super.getY();
-
-		super.getBoundingPolygon().setPosition(super.getX() + getVelocity().x, super.getY() + getVelocity().y);
-
-		super.setX(super.getX() + getVelocity().x);
-		super.setY(super.getY() + getVelocity().y);
+		
+		super.setTouchedTiles(entityManager.findTiles(super.getBoundingPolygon()));
 
 		if (getVelocity().x != 0) {
-			super.setTouchedTiles(entityManager.findTiles(super.getBoundingPolygon()));
+			super.getBoundingPolygon().setPosition(super.getX() + getVelocity().x, super.getY());
+			
 
 			if (entityManager.collidingWithEntity(this)) {
 
 				super.getBoundingPolygon().setPosition(old_tempX, super.getY());
 				super.setX(old_tempX);
+				velocity.x = 0;
 			}
 
 		}
 
 		if (getVelocity().y != 0) {
+
+		//	super.getBoundingPolygon().setPosition(super.getX(), super.getY() + getVelocity().y);
 			super.setTouchedTiles(entityManager.findTiles(getBoundingPolygon()));
 
 			if (entityManager.collidingWithEntity(this)) {
 				super.getBoundingPolygon().setPosition(super.getX(), old_tempY);
 				super.setY(old_tempY);
+				velocity.y = 0;
 			}
 		}
+
+		super.setX(super.getX() + getVelocity().x);
+		super.setY(super.getY() + getVelocity().y);
 
 	}
 
