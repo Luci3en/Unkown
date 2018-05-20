@@ -8,13 +8,14 @@ import java.util.Map.Entry;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Disposable;
 
 import game.Map;
 import game.Tile;
 import game.entity.Creature;
 import game.entity.Entity;
 
-public class EntityManager {
+public class EntityManager implements Disposable {
 
 	private Map map;
 	private HashMap<Integer, Entity> entities;
@@ -89,12 +90,10 @@ public class EntityManager {
 
 		for (int i = left; i <= right; i++) {
 			for (int j = buttom; j <= top; j++) {
-				
-				if(i >= 0 && i < Map.MAP_WIDTH && j >= 0 && j < Map.MAP_HEIGHT) {
+
+				if (i >= 0 && i < Map.MAP_WIDTH && j >= 0 && j < Map.MAP_HEIGHT) {
 					touchedTiles.add(map.getTile(i, j));
 				}
-				
-			
 
 			}
 		}
@@ -123,6 +122,20 @@ public class EntityManager {
 		}
 
 		return collided;
+	}
+
+	@Override
+	public void dispose() {
+		for (Entry<Integer, Entity> entity : entities.entrySet()) {
+			entity.getValue().dispose();
+		}
+
+		for (Entity entity : renderOrder) {
+			entity.dispose();
+		}
+		
+		map.getTiledMap().dispose();
+		
 	}
 
 	public HashMap<Integer, Entity> getEntities() {

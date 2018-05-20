@@ -72,8 +72,8 @@ public class Creature extends Entity {
 
 		if (getVelocity().x != 0 || getVelocity().y != 0) {
 			stateTime += Gdx.graphics.getDeltaTime();
-			setMoving(true);
 
+			setMoving(true);
 			move(entityManager);
 
 			if (getVelocity().x < 0) {
@@ -97,7 +97,6 @@ public class Creature extends Entity {
 
 		else {
 			setMoving(false);
-			return;
 		}
 	}
 
@@ -105,12 +104,10 @@ public class Creature extends Entity {
 
 		float old_tempX = super.getX();
 		float old_tempY = super.getY();
-		
-		super.setTouchedTiles(entityManager.findTiles(super.getBoundingPolygon()));
 
 		if (getVelocity().x != 0) {
 			super.getBoundingPolygon().setPosition(super.getX() + getVelocity().x, super.getY());
-			
+			super.setTouchedTiles(entityManager.findTiles(super.getBoundingPolygon()));
 
 			if (entityManager.collidingWithEntity(this)) {
 
@@ -123,7 +120,7 @@ public class Creature extends Entity {
 
 		if (getVelocity().y != 0) {
 
-		//	super.getBoundingPolygon().setPosition(super.getX(), super.getY() + getVelocity().y);
+			super.getBoundingPolygon().setPosition(super.getX(), super.getY() + getVelocity().y);
 			super.setTouchedTiles(entityManager.findTiles(getBoundingPolygon()));
 
 			if (entityManager.collidingWithEntity(this)) {
@@ -136,6 +133,10 @@ public class Creature extends Entity {
 		super.setX(super.getX() + getVelocity().x);
 		super.setY(super.getY() + getVelocity().y);
 
+	}
+
+	@Override
+	public void dispose() {
 	}
 
 	public Weapon getWeapon() {

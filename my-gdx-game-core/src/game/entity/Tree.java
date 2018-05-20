@@ -48,4 +48,9 @@ public class Tree extends Entity {
 
 	}
 
+	@Override
+	public void dispose() {
+		getSprite().getTexture().dispose();
+	}
+
 }

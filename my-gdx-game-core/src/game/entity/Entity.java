@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Disposable;
 
 import game.Map;
 import game.Tile;
@@ -12,7 +14,7 @@ import game.World;
 import game.utility.BoundingPolygon;
 import game.utility.EntityManager;
 
-public abstract class Entity {
+public abstract class Entity implements Disposable {
 
 	public static int ID = 1;
 
@@ -48,9 +50,6 @@ public abstract class Entity {
 		this.boundingPolygon.setRectangleBoundary();
 		this.solid = solid;
 		this.touchedTiles = new ArrayList<Tile>();
-		// this.touchedTiles = world.getEntityManager().findTiles(hitbox,
-		// world.getMap());
-		// addEntityInWorld(world);
 
 	}
 
@@ -77,7 +76,6 @@ public abstract class Entity {
 	}
 
 	public void addEntityInWorld(World world) {
-
 		for (Tile tile : touchedTiles) {
 			world.getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().add(id);
 		}
@@ -88,13 +86,8 @@ public abstract class Entity {
 	}
 
 	public void setX(float x) {
-		if (x >= 0 && x <= Map.MAP_PIXEL_WIDTH - boundingPolygon.getWidth()) {
-			
-			
-			this.x = x;
-		} else {
-			return;
-		}
+		x = MathUtils.clamp(x, 0, Map.MAP_PIXEL_WIDTH - boundingPolygon.getWidth());
+		this.x = x;
 
 	}
 
@@ -103,12 +96,8 @@ public abstract class Entity {
 	}
 
 	public void setY(float y) {
-
-		if (y >= 0 && y <= Map.MAP_PIXEL_HEIGHT - boundingPolygon.getHeight()) {
-			this.y = y;
-		} else {
-			return;
-		}
+		y = MathUtils.clamp(y, 0, Map.MAP_PIXEL_HEIGHT - boundingPolygon.getHeight());
+		this.y = y;
 
 	}
 

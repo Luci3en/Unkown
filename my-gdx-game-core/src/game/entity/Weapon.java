@@ -1,7 +1,5 @@
 package game.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import game.utility.BoundingPolygon;
@@ -24,18 +22,11 @@ public class Weapon {
 		polygon.setPosition(x, y);
 		polygon.setOrigin(0, 0);
 
-		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+	}
 
-			
-					polygon.setRotation(0);
-
-				polygon.rotate(-1.8f * 2);
-
-				System.out.println(polygon.getRotation());
-			}
-
-		}
-
+	public void attack() {
+		polygon.rotate(-1.8f * 2);
+	}
 
 	public void render(ShapeRenderer shapeRenderer) {
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -12,20 +13,20 @@ import game.entity.Tree;
 import game.utility.CameraStyles;
 import game.utility.EntityManager;
 
-public class World {
+public class World implements Disposable {
 
 	private OrthographicCamera camera;
 	private Viewport viewport;
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private ShapeRenderer shapeRenderer;
+	private SpriteBatch spriteBatch;
 
 	private EntityManager entityManager;
 	private Map map;
 
 	public World() {
 
-		// World braucht eine dispose() um die Sprites der ganzen Entitys frei zu geben
-
+		this.spriteBatch = new SpriteBatch();
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setAutoShapeType(true);
 		this.camera = new OrthographicCamera();
@@ -52,7 +53,7 @@ public class World {
 
 	}
 
-	public void render(SpriteBatch spriteBatch) {
+	public void render() {
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
@@ -68,6 +69,14 @@ public class World {
 
 		entityManager.debugRender(shapeRenderer);
 		shapeRenderer.end();
+
+	}
+
+	@Override
+	public void dispose() {
+		entityManager.dispose();
+		tiledMapRenderer.dispose();
+		shapeRenderer.dispose();
 
 	}
 
@@ -101,6 +110,30 @@ public class World {
 
 	public void setMap(Map map) {
 		this.map = map;
+	}
+
+	public OrthogonalTiledMapRenderer getTiledMapRenderer() {
+		return tiledMapRenderer;
+	}
+
+	public void setTiledMapRenderer(OrthogonalTiledMapRenderer tiledMapRenderer) {
+		this.tiledMapRenderer = tiledMapRenderer;
+	}
+
+	public ShapeRenderer getShapeRenderer() {
+		return shapeRenderer;
+	}
+
+	public void setShapeRenderer(ShapeRenderer shapeRenderer) {
+		this.shapeRenderer = shapeRenderer;
+	}
+
+	public SpriteBatch getSpriteBatch() {
+		return spriteBatch;
+	}
+
+	public void setSpriteBatch(SpriteBatch spriteBatch) {
+		this.spriteBatch = spriteBatch;
 	}
 
 }

@@ -24,10 +24,8 @@ public class GameScreen extends AbstractScreen {
 
 	public GameScreen(Application app) {
 		super(app);
-
 		this.world = new World();
 		this.controller = new Controller(this);
-
 	}
 
 	@Override
@@ -37,7 +35,6 @@ public class GameScreen extends AbstractScreen {
 		inputMultiplexer.addProcessor(controller);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
-
 	}
 
 	@Override
@@ -45,21 +42,24 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (stage.getActors().size == 0) {
-			controller.update(delta);
-		} else {
-			stage.act(delta);
+		controller.update(delta);
+		stage.act(delta);
 
-		}
-
-		world.render(app.getSpriteBatch());
+		world.render();
 		stage.draw();
 
 	}
 
 	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		world.getViewport().update(width, height);
+	}
+
+	@Override
 	public void dispose() {
 		super.dispose();
+		world.dispose();
 	}
 
 	public void showGameMenu() {

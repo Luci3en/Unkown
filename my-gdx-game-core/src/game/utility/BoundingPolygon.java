@@ -1,7 +1,10 @@
 package game.utility;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
+
+import game.Map;
 
 public class BoundingPolygon extends Polygon {
 
@@ -26,6 +29,8 @@ public class BoundingPolygon extends Polygon {
 
 	@Override
 	public void setPosition(float x, float y) {
+		x = MathUtils.clamp(x, 0, Map.MAP_PIXEL_WIDTH + getWidth() / 2);
+		y = MathUtils.clamp(y, 0, Map.MAP_PIXEL_HEIGHT + getWidth() / 2);
 		super.setPosition(x + offsetX, y + offsetY);
 	}
 
