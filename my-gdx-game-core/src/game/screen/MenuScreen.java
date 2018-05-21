@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -100,76 +99,6 @@ public class MenuScreen extends AbstractScreen {
 		table.add(exit).width(85);
 
 		background.setSize(Application.WIDTH, Application.HEIGHT);
-		background.addAction(Actions.sequence(Actions.alpha(0.5f), Actions.fadeIn(0.4f)));
-
-		stage.addActor(background);
-		stage.addActor(table);
-
-	}
-
-	public void showSettings() {
-		stage.clear();
-
-		Image background = new Image(getApp().getAssetManager().get("img/background.jpg", Texture.class));
-
-		Label header = new Label("Settings", getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
-		header.setFontScale(1.5f);
-
-		TextButton back = new TextButton("Back", getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
-		back.addListener(new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-
-				stage.clear();
-				show();
-
-			}
-
-		});
-
-		CheckBox fullscreen = new CheckBox(" Fullscreen",
-				getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
-
-		if (Gdx.graphics.isFullscreen()) {
-
-			fullscreen.setChecked(true);
-
-		} else {
-			fullscreen.setChecked(false);
-		}
-
-		fullscreen.addListener(new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-
-				if (!(Gdx.graphics.isFullscreen())) {
-					app.getPreferences().putBoolean("fullscreen", true);
-					Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-				} else {
-
-					app.getPreferences().putBoolean("fullscreen", false);
-					Gdx.graphics.setWindowedMode(1024, 768);
-				}
-
-				app.getPreferences().flush();
-			}
-
-		});
-
-		Table table = new Table();
-
-		table.setFillParent(true);
-		table.add(header).pad(100, 300, 100, 300);
-		table.row();
-		table.add(fullscreen).padBottom(30);
-		table.row();
-		table.add(back).width(85);
-
-		table.addAction(Actions.sequence(Actions.alpha(0),
-				Actions.parallel(Actions.fadeIn(0.5f), Actions.moveBy(0, -20, 0.5f, Interpolation.pow5Out))));
-
 		background.addAction(Actions.sequence(Actions.alpha(0.5f), Actions.fadeIn(0.4f)));
 
 		stage.addActor(background);

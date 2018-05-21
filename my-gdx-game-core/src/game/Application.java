@@ -15,7 +15,7 @@ public class Application extends Game {
 	public final static String TITEL = "Unknown";
 	public final static int WIDTH = 1024;
 	public final static int HEIGHT = 768;
-	public final static float VERSION = 0.012f;
+	public final static float VERSION = 0.013f;
 
 	private Preferences preferences;
 	private OrthographicCamera camera;
@@ -31,13 +31,11 @@ public class Application extends Game {
 
 		this.preferences = Gdx.app.getPreferences("Preferences");
 		this.loadPreferences();
-		
+
 		this.camera = new OrthographicCamera();
 		this.camera.setToOrtho(false, Application.WIDTH, Application.HEIGHT);
 		this.assetManager = new AssetManager();
-		
 
-		
 		this.splashSreen = new SplashScreen(this);
 		this.menuScreen = new MenuScreen(this);
 		this.gameScreen = new GameScreen(this);

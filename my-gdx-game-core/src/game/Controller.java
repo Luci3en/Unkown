@@ -81,7 +81,6 @@ public class Controller implements InputProcessor {
 			break;
 
 		case Input.Keys.ESCAPE:
-
 			if (gameScreen.getStage().getActors().size > 0) {
 				gameScreen.getStage().clear();
 			} else {

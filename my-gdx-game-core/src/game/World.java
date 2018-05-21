@@ -41,15 +41,15 @@ public class World implements Disposable {
 
 		spawnEntity(new Tree(50, 40, this));
 		spawnEntity(new Tree(100, 60, this));
-		spawnEntity(new Tree(95, 130, this));
-
 		spawnEntity(new Tree(64, 200, this));
 		spawnEntity(new Tree(100, 180, this));
 		spawnEntity(new Tree(80, 20, this));
-
+		spawnEntity(new Tree(250, 50, this));
+		spawnEntity(new Tree(366, 80, this));
+		spawnEntity(new Tree(188, 30, this));
 		spawnEntity(new Tree(200, 20, this));
 		spawnEntity(new Tree(300, 80, this));
-		spawnEntity(new Tree(400, 20, this));
+		spawnEntity(new Tree(400, 30, this));
 
 	}
 

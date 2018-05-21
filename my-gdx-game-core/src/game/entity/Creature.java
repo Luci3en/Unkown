@@ -48,7 +48,8 @@ public class Creature extends Entity {
 
 		if (currentAnimation != null) {
 
-			TextureRegion currentFrame = (TextureRegion) currentAnimation.getKeyFrame(stateTime, true);
+			TextureRegion currentFrame = (TextureRegion) currentAnimation
+					.getKeyFrame(stateTime += Gdx.graphics.getDeltaTime(), true);
 
 			if (isMoving()) {
 
@@ -71,10 +72,8 @@ public class Creature extends Entity {
 		weapon.update(super.getX() + 20, getY() + 30);
 
 		if (getVelocity().x != 0 || getVelocity().y != 0) {
-			stateTime += Gdx.graphics.getDeltaTime();
 
 			setMoving(true);
-			move(world);
 
 			if (getVelocity().x < 0) {
 				currentAnimation = left_walking;
@@ -92,7 +91,7 @@ public class Creature extends Entity {
 				currentAnimation = up_walking;
 			}
 
-			getVelocity().set(0, 0);
+			move(world);
 		}
 
 		else {
@@ -132,6 +131,7 @@ public class Creature extends Entity {
 
 		super.setX(super.getX() + getVelocity().x);
 		super.setY(super.getY() + getVelocity().y);
+		getVelocity().set(0, 0);
 
 	}
 
