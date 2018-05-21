@@ -1,11 +1,15 @@
 package game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+
+import game.utility.BoundingPolygon;
 
 public class Map {
 
@@ -51,6 +55,28 @@ public class Map {
 	public Tile getTile(int x, int y) {
 		TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
 		return (Tile) layer.getCell(x, y).getTile();
+	}
+
+	public ArrayList<Tile> findTiles(BoundingPolygon boundingPolygon) {
+
+		ArrayList<Tile> touchedTiles = new ArrayList<Tile>();
+
+		int left = (int) (boundingPolygon.getX() / Tile.TILE_PIXEL_WIDTH);
+		int right = (int) ((boundingPolygon.getX() + boundingPolygon.getWidth()) / Tile.TILE_PIXEL_WIDTH);
+		int buttom = (int) (boundingPolygon.getY() / Tile.TILE_PIXEL_HEIGHT);
+		int top = (int) ((boundingPolygon.getY() + boundingPolygon.getHeight()) / Tile.TILE_PIXEL_HEIGHT);
+
+		for (int i = left; i <= right; i++) {
+			for (int j = buttom; j <= top; j++) {
+
+				if (i >= 0 && i < Map.MAP_WIDTH && j >= 0 && j < Map.MAP_HEIGHT) {
+					touchedTiles.add(getTile(i, j));
+				}
+
+			}
+		}
+
+		return touchedTiles;
 	}
 
 	public TiledMap getTiledMap() {

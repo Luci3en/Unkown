@@ -10,20 +10,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 
-import game.Map;
 import game.Tile;
+import game.World;
 import game.entity.Creature;
 import game.entity.Entity;
 
 public class EntityManager implements Disposable {
 
-	private Map map;
 	private HashMap<Integer, Entity> entities;
 	private ArrayList<Entity> renderOrder;
 	private Comparator<Entity> yOrder;
 
-	public EntityManager(Map map) {
-		this.map = map;
+	public EntityManager() {
 		this.entities = new HashMap<Integer, Entity>();
 		this.renderOrder = new ArrayList<Entity>();
 		this.yOrder = new Comparator<Entity>() {
@@ -36,7 +34,7 @@ public class EntityManager implements Disposable {
 
 	}
 
-	public void render(SpriteBatch spriteBatch, Map map) {
+	public void render(SpriteBatch spriteBatch, World world) {
 
 		renderOrder.clear();
 		renderOrder.addAll(entities.values());
@@ -45,7 +43,7 @@ public class EntityManager implements Disposable {
 		for (Entity entity : renderOrder) {
 
 			if (entity instanceof Creature) {
-				entity.update(this);
+				entity.update(world);
 				entity.render(spriteBatch);
 			} else {
 
@@ -69,7 +67,6 @@ public class EntityManager implements Disposable {
 			}
 
 			for (int i = 0; i < entity.getValue().getTouchedTiles().size(); i++) {
-
 				shapeRenderer.rect(entity.getValue().getTouchedTiles().get(i).getX() * 32,
 						entity.getValue().getTouchedTiles().get(i).getY() * 32, 32, 32);
 
@@ -79,49 +76,30 @@ public class EntityManager implements Disposable {
 
 	}
 
-	public ArrayList<Tile> findTiles(BoundingPolygon boundingPolygon) {
-
-		ArrayList<Tile> touchedTiles = new ArrayList<Tile>();
-
-		int left = (int) (boundingPolygon.getX() / Tile.TILE_PIXEL_WIDTH);
-		int right = (int) ((boundingPolygon.getX() + boundingPolygon.getWidth()) / Tile.TILE_PIXEL_WIDTH);
-		int buttom = (int) (boundingPolygon.getY() / Tile.TILE_PIXEL_HEIGHT);
-		int top = (int) ((boundingPolygon.getY() + boundingPolygon.getHeight()) / Tile.TILE_PIXEL_HEIGHT);
-
-		for (int i = left; i <= right; i++) {
-			for (int j = buttom; j <= top; j++) {
-
-				if (i >= 0 && i < Map.MAP_WIDTH && j >= 0 && j < Map.MAP_HEIGHT) {
-					touchedTiles.add(map.getTile(i, j));
-				}
-
-			}
-		}
-
-		return touchedTiles;
-	}
-
 	public boolean collidingWithEntity(Entity entity) {
-
-		boolean collided = false;
 
 		for (Tile tile : entity.getTouchedTiles()) {
 
-			for (int id : tile.getEntityIDs()) {
-				if (id != 0 && id != entity.getId()) {
+			if (tile.getEntityIDs().size() == 0) {
+				continue;
+			} else {
 
-					if (entity.collides(entities.get(id))) {
-						collided = true;
+				for (int id : tile.getEntityIDs()) {
+					if (id != 0 && id != entity.getId()) {
+
+						if (entity.colliding(entities.get(id))) {
+							return true;
+						}
+
+					} else {
+						continue;
 					}
-
-				} else {
-					continue;
 				}
+
 			}
 
 		}
-
-		return collided;
+		return false;
 	}
 
 	@Override
@@ -133,9 +111,7 @@ public class EntityManager implements Disposable {
 		for (Entity entity : renderOrder) {
 			entity.dispose();
 		}
-		
-		map.getTiledMap().dispose();
-		
+
 	}
 
 	public HashMap<Integer, Entity> getEntities() {

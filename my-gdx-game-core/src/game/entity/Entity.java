@@ -12,7 +12,6 @@ import game.Map;
 import game.Tile;
 import game.World;
 import game.utility.BoundingPolygon;
-import game.utility.EntityManager;
 
 public abstract class Entity implements Disposable {
 
@@ -32,6 +31,7 @@ public abstract class Entity implements Disposable {
 	public Entity(float x, float y, BoundingPolygon boundingPolygon) {
 		this.id = Entity.ID;
 		Entity.ID++;
+		
 		this.x = x;
 		this.y = y;
 		this.boundingPolygon = boundingPolygon;
@@ -57,11 +57,11 @@ public abstract class Entity implements Disposable {
 		sprite.draw(spriteBatch);
 	}
 
-	public void update(EntityManager entityManager) {
+	public void update(World world) {
 
 	}
 
-	public boolean collides(Entity entity) {
+	public boolean colliding(Entity entity) {
 
 		if (Intersector.overlapConvexPolygons(getBoundingPolygon(), entity.getBoundingPolygon())) {
 
@@ -73,12 +73,6 @@ public abstract class Entity implements Disposable {
 
 		}
 
-	}
-
-	public void addEntityInWorld(World world) {
-		for (Tile tile : touchedTiles) {
-			world.getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().add(id);
-		}
 	}
 
 	public float getX() {

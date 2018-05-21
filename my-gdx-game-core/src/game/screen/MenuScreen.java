@@ -2,10 +2,12 @@ package game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,6 +21,7 @@ public class MenuScreen extends AbstractScreen {
 	public MenuScreen(Application app) {
 		super(app);
 		app.getAssetManager().load("skin/uiskin.json", Skin.class);
+		app.getAssetManager().load("img/background.jpg", Texture.class);
 		app.getAssetManager().finishLoading();
 
 	}
@@ -26,7 +29,7 @@ public class MenuScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.gl.glClearColor(0.6f, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 
 		stage.act(delta);
 		stage.draw();
@@ -41,6 +44,9 @@ public class MenuScreen extends AbstractScreen {
 
 	public void showMainMenu() {
 		stage.clear();
+
+		Image background = new Image(getApp().getAssetManager().get("img/background.jpg", Texture.class));
+
 		Label header = new Label("Unkown", app.getAssetManager().get("skin/uiskin.json", Skin.class));
 		header.setColor(1, 1, 1, 1);
 		header.setFontScale(2f);
@@ -93,12 +99,19 @@ public class MenuScreen extends AbstractScreen {
 		table.row();
 		table.add(exit).width(85);
 
+		background.setSize(Application.WIDTH, Application.HEIGHT);
+		background.addAction(Actions.sequence(Actions.alpha(0.5f), Actions.fadeIn(0.4f)));
+
+		stage.addActor(background);
 		stage.addActor(table);
 
 	}
 
 	public void showSettings() {
 		stage.clear();
+
+		Image background = new Image(getApp().getAssetManager().get("img/background.jpg", Texture.class));
+
 		Label header = new Label("Settings", getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
 		header.setFontScale(1.5f);
 
@@ -122,6 +135,8 @@ public class MenuScreen extends AbstractScreen {
 
 			fullscreen.setChecked(true);
 
+		} else {
+			fullscreen.setChecked(false);
 		}
 
 		fullscreen.addListener(new ClickListener() {
@@ -130,12 +145,15 @@ public class MenuScreen extends AbstractScreen {
 			public void clicked(InputEvent event, float x, float y) {
 
 				if (!(Gdx.graphics.isFullscreen())) {
+					app.getPreferences().putBoolean("fullscreen", true);
 					Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 				} else {
 
+					app.getPreferences().putBoolean("fullscreen", false);
 					Gdx.graphics.setWindowedMode(1024, 768);
 				}
 
+				app.getPreferences().flush();
 			}
 
 		});
@@ -152,6 +170,9 @@ public class MenuScreen extends AbstractScreen {
 		table.addAction(Actions.sequence(Actions.alpha(0),
 				Actions.parallel(Actions.fadeIn(0.5f), Actions.moveBy(0, -20, 0.5f, Interpolation.pow5Out))));
 
+		background.addAction(Actions.sequence(Actions.alpha(0.5f), Actions.fadeIn(0.4f)));
+
+		stage.addActor(background);
 		stage.addActor(table);
 
 	}

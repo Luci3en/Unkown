@@ -139,6 +139,8 @@ public class GameScreen extends AbstractScreen {
 
 			fullscreen.setChecked(true);
 
+		} else {
+			fullscreen.setChecked(false);
 		}
 
 		fullscreen.addListener(new ClickListener() {
@@ -147,12 +149,15 @@ public class GameScreen extends AbstractScreen {
 			public void clicked(InputEvent event, float x, float y) {
 
 				if (!(Gdx.graphics.isFullscreen())) {
+					app.getPreferences().putBoolean("fullscreen", true);
 					Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 				} else {
 
+					app.getPreferences().putBoolean("fullscreen", false);
 					Gdx.graphics.setWindowedMode(1024, 768);
 				}
 
+				app.getPreferences().flush();
 			}
 
 		});

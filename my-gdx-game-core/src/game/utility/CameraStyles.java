@@ -9,13 +9,12 @@ import game.Map;
 import game.entity.Entity;
 
 public class CameraStyles {
-
+	
+	
 	public final static int WORLD_VIEWPORT_WIDTH = Application.WIDTH / 2;
 	public final static int WORLD_VIEWPORT_HEIGHT = Application.HEIGHT / 2;
 
 	public static void lockOnEntity(Camera camera, Entity entity) {
-
-		// Es gibt eine camera.lookat() methode testen...
 
 		camera.position.x = entity.getX();
 

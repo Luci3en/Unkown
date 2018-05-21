@@ -2,9 +2,9 @@ package game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import game.screen.GameScreen;
 import game.screen.MenuScreen;
@@ -17,8 +17,8 @@ public class Application extends Game {
 	public final static int HEIGHT = 768;
 	public final static float VERSION = 0.012f;
 
+	private Preferences preferences;
 	private OrthographicCamera camera;
-	private SpriteBatch spriteBatch;
 	private AssetManager assetManager;
 
 	private SplashScreen splashSreen;
@@ -28,16 +28,33 @@ public class Application extends Game {
 	@Override
 	public void create() {
 		Gdx.app.log("Application: ", "create()");
+
+		this.preferences = Gdx.app.getPreferences("Preferences");
+		this.loadPreferences();
+		
 		this.camera = new OrthographicCamera();
 		this.camera.setToOrtho(false, Application.WIDTH, Application.HEIGHT);
 		this.assetManager = new AssetManager();
-		this.spriteBatch = new SpriteBatch();
+		
 
+		
 		this.splashSreen = new SplashScreen(this);
 		this.menuScreen = new MenuScreen(this);
 		this.gameScreen = new GameScreen(this);
 
-		super.setScreen(gameScreen);
+		super.setScreen(menuScreen);
+
+	}
+
+	public void loadPreferences() {
+
+		if (preferences.contains("fullscreen") && preferences.getBoolean("fullscreen") == true) {
+
+			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		} else {
+
+			Gdx.graphics.setWindowedMode(1024, 768);
+		}
 
 	}
 
@@ -57,7 +74,6 @@ public class Application extends Game {
 	@Override
 	public void dispose() {
 		Gdx.app.log("Application", "dispose()");
-		spriteBatch.dispose();
 		assetManager.dispose();
 		splashSreen.dispose();
 		gameScreen.dispose();
@@ -73,12 +89,12 @@ public class Application extends Game {
 		this.camera = camera;
 	}
 
-	public SpriteBatch getSpriteBatch() {
-		return spriteBatch;
+	public Preferences getPreferences() {
+		return preferences;
 	}
 
-	public void setSpriteBatch(SpriteBatch spriteBatch) {
-		this.spriteBatch = spriteBatch;
+	public void setPreferences(Preferences preferences) {
+		this.preferences = preferences;
 	}
 
 	public AssetManager getAssetManager() {

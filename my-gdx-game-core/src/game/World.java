@@ -37,19 +37,19 @@ public class World implements Disposable {
 
 		this.map = new Map(35, 35);
 		this.tiledMapRenderer = new OrthogonalTiledMapRenderer(map.getTiledMap());
-		this.entityManager = new EntityManager(map);
+		this.entityManager = new EntityManager();
 
-		entityManager.getEntities().put(Entity.ID, new Tree(50, 40, this));
-		entityManager.getEntities().put(Entity.ID, new Tree(80, 20, this));
-		entityManager.getEntities().put(Entity.ID, new Tree(100, 60, this));
+		spawnEntity(new Tree(50, 40, this));
+		spawnEntity(new Tree(100, 60, this));
+		spawnEntity(new Tree(95, 130, this));
 
-		entityManager.getEntities().put(Entity.ID, new Tree(90, 180, this));
-		entityManager.getEntities().put(Entity.ID, new Tree(61, 200, this));
-		entityManager.getEntities().put(Entity.ID, new Tree(100, 190, this));
+		spawnEntity(new Tree(64, 200, this));
+		spawnEntity(new Tree(100, 180, this));
+		spawnEntity(new Tree(80, 20, this));
 
-		entityManager.getEntities().put(Entity.ID, new Tree(200, 20, this));
-		entityManager.getEntities().put(Entity.ID, new Tree(300, 80, this));
-		entityManager.getEntities().put(Entity.ID, new Tree(400, 20, this));
+		spawnEntity(new Tree(200, 20, this));
+		spawnEntity(new Tree(300, 80, this));
+		spawnEntity(new Tree(400, 20, this));
 
 	}
 
@@ -60,16 +60,25 @@ public class World implements Disposable {
 		spriteBatch.setProjectionMatrix(camera.combined);
 		spriteBatch.begin();
 
-		entityManager.render(spriteBatch, map);
+		entityManager.render(spriteBatch, this);
 
 		spriteBatch.end();
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin();
 
-		entityManager.debugRender(shapeRenderer);
+		// entityManager.debugRender(shapeRenderer);
 		shapeRenderer.end();
 
+	}
+
+	public void spawnEntity(Entity entity) {
+
+		entityManager.getEntities().put(entity.getId(), entity);
+
+		for (Tile tile : entity.getTouchedTiles()) {
+			getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().add(entity.getId());
+		}
 	}
 
 	@Override

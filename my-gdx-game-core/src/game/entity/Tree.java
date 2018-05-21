@@ -38,8 +38,7 @@ public class Tree extends Entity {
 		}
 
 		super.getBoundingPolygon().setPosition(getX(), getY());
-		super.setTouchedTiles(world.getEntityManager().findTiles(super.getBoundingPolygon()));
-		super.addEntityInWorld(world);
+		super.setTouchedTiles(world.getMap().findTiles(getBoundingPolygon()));
 
 		Sprite sprite = new Sprite(textureAtlas.findRegion(treeTexture));
 		setSprite(sprite);
@@ -53,4 +52,14 @@ public class Tree extends Entity {
 		getSprite().getTexture().dispose();
 	}
 
+	@Override
+	public String toString() {
+		return "Tree [getX()=" + getX() + ", getY()=" + getY() + ", getId()=" + getId() + ", getBoundingPolygon()="
+				+ getBoundingPolygon() + ", getSprite()=" + getSprite() + ", getTouchedTiles()=" + getTouchedTiles()
+				+ ", isSolid()=" + isSolid() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
+				+ ", toString()=" + super.toString() + "]";
+	}
+
+	
+	
 }

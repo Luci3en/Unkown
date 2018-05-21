@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import game.World;
 import game.utility.BoundingPolygon;
-import game.utility.EntityManager;
 
 public class Creature extends Entity {
 
@@ -21,7 +21,7 @@ public class Creature extends Entity {
 
 	public Creature(float x, float y) {
 		super(x, y, new BoundingPolygon(x, y, 20, 15));
-		getBoundingPolygon().setOffsetX(5f);
+
 		this.weapon = new Weapon(x + 20, y + 30);
 		this.stateTime = 0;
 		this.moving = false;
@@ -66,7 +66,7 @@ public class Creature extends Entity {
 	}
 
 	@Override
-	public void update(EntityManager entityManager) {
+	public void update(World world) {
 
 		weapon.update(super.getX() + 20, getY() + 30);
 
@@ -74,7 +74,7 @@ public class Creature extends Entity {
 			stateTime += Gdx.graphics.getDeltaTime();
 
 			setMoving(true);
-			move(entityManager);
+			move(world);
 
 			if (getVelocity().x < 0) {
 				currentAnimation = left_walking;
@@ -100,16 +100,16 @@ public class Creature extends Entity {
 		}
 	}
 
-	public void move(EntityManager entityManager) {
+	public void move(World world) {
 
 		float old_tempX = super.getX();
 		float old_tempY = super.getY();
 
 		if (getVelocity().x != 0) {
 			super.getBoundingPolygon().setPosition(super.getX() + getVelocity().x, super.getY());
-			super.setTouchedTiles(entityManager.findTiles(super.getBoundingPolygon()));
+			super.setTouchedTiles(world.getMap().findTiles(super.getBoundingPolygon()));
 
-			if (entityManager.collidingWithEntity(this)) {
+			if (world.getEntityManager().collidingWithEntity(this)) {
 
 				super.getBoundingPolygon().setPosition(old_tempX, super.getY());
 				super.setX(old_tempX);
@@ -121,9 +121,9 @@ public class Creature extends Entity {
 		if (getVelocity().y != 0) {
 
 			super.getBoundingPolygon().setPosition(super.getX(), super.getY() + getVelocity().y);
-			super.setTouchedTiles(entityManager.findTiles(getBoundingPolygon()));
+			super.setTouchedTiles(world.getMap().findTiles(getBoundingPolygon()));
 
-			if (entityManager.collidingWithEntity(this)) {
+			if (world.getEntityManager().collidingWithEntity(this)) {
 				super.getBoundingPolygon().setPosition(super.getX(), old_tempY);
 				super.setY(old_tempY);
 				velocity.y = 0;

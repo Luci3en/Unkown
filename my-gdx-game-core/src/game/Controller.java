@@ -1,40 +1,45 @@
 package game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import game.entity.Creature;
 import game.entity.Entity;
-import game.entity.Tree;
 import game.screen.GameScreen;
 import game.utility.CameraStyles;
 
 public class Controller implements InputProcessor {
 
-	private boolean pressed_W, pressed_S, pressed_A, pressed_D;
+	private boolean pressed_W, pressed_S, pressed_A, pressed_D, pressed_LeftMouseButton, pressed_RightMouseButton;
 	private int currentEntityID;
 	private Creature creature;
 	private GameScreen gameScreen;
 
 	public Controller(GameScreen gameScreen) {
 		this.gameScreen = gameScreen;
+		this.pressed_LeftMouseButton = false;
+		this.pressed_RightMouseButton = false;
 		this.pressed_W = false;
 		this.pressed_S = false;
 		this.pressed_A = false;
 		this.pressed_D = false;
 
-		gameScreen.getWorld().getEntityManager().getEntities().put(Entity.ID, new Creature(100, 100));
+		gameScreen.getWorld().getEntityManager().getEntities().put(Entity.ID, new Creature(200, 200));
 		setCurrentEntityID(Entity.ID - 1);
 		setCreature((Creature) gameScreen.getWorld().getEntityManager().getEntities().get(getCurrentEntityID()));
+
+		getCreature().getBoundingPolygon().setOffsetX(5);
 
 	}
 
 	public void update(float delta) {
 
 		CameraStyles.lockOnEntity(gameScreen.getWorld().getCamera(), getCreature());
+
+		if (pressed_LeftMouseButton) {
+			creature.getWeapon().attack();
+		}
 
 		if (pressed_A) {
 			creature.getVelocity().x = -creature.getSpeed() * delta;
@@ -51,14 +56,6 @@ public class Controller implements InputProcessor {
 		if (pressed_W) {
 			creature.getVelocity().y = creature.getSpeed() * delta;
 
-		}
-
-		if (Gdx.input.isKeyJustPressed(Keys.H)) {
-			int tempX = (int) (Math.random() * 500);
-			int tempY = (int) (Math.random() * 500);
-
-			gameScreen.getWorld().getEntityManager().getEntities().put(Entity.ID,
-					new Tree(tempX, tempY, gameScreen.getWorld()));
 		}
 
 	}
@@ -150,6 +147,19 @@ public class Controller implements InputProcessor {
 	@Override
 	public boolean touchDown(int arg0, int arg1, int arg2, int keyCode) {
 
+		switch (keyCode) {
+		case Input.Buttons.LEFT:
+			setPressed_LeftMouseButton(true);
+			break;
+
+		case Input.Buttons.RIGHT:
+			setPressed_RightMouseButton(true);
+			break;
+
+		default:
+			break;
+		}
+
 		return false;
 	}
 
@@ -160,9 +170,24 @@ public class Controller implements InputProcessor {
 	}
 
 	@Override
-	public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
+	public boolean touchUp(int arg0, int arg1, int arg2, int keyCode) {
+
+		switch (keyCode) {
+		case Input.Buttons.LEFT:
+			setPressed_LeftMouseButton(false);
+			break;
+
+		case Input.Buttons.RIGHT:
+			setPressed_RightMouseButton(false);
+			break;
+
+		default:
+			break;
+
+		}
+
 		return false;
+
 	}
 
 	public boolean isPressed_W() {
@@ -195,6 +220,22 @@ public class Controller implements InputProcessor {
 
 	public void setPressed_D(boolean pressed_D) {
 		this.pressed_D = pressed_D;
+	}
+
+	public boolean isPressed_LeftMouseButton() {
+		return pressed_LeftMouseButton;
+	}
+
+	public void setPressed_LeftMouseButton(boolean pressed_LeftMouseButton) {
+		this.pressed_LeftMouseButton = pressed_LeftMouseButton;
+	}
+
+	public boolean isPressed_RightMouseButton() {
+		return pressed_RightMouseButton;
+	}
+
+	public void setPressed_RightMouseButton(boolean pressed_RightMouseButton) {
+		this.pressed_RightMouseButton = pressed_RightMouseButton;
 	}
 
 	public int getCurrentEntityID() {

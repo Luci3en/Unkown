@@ -18,7 +18,7 @@ public class DesktopLauncher {
 		config.addIcon("img/Icon.png", FileType.Internal);
 
 		// Antialiasing
-		// config.samples = 2;
+		config.samples = 2;
 			
 		
 		new LwjglApplication(new Application(), config);
