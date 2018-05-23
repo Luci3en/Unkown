@@ -25,11 +25,10 @@ public class Controller implements InputProcessor {
 		this.pressed_A = false;
 		this.pressed_D = false;
 
-		gameScreen.getWorld().getEntityManager().getEntities().put(Entity.ID, new Creature(200, 200));
+		gameScreen.getWorld().getEntityManager().getEntities().put(Entity.ID,
+				new Creature(200, 200, gameScreen.getWorld()));
 		setCurrentEntityID(Entity.ID - 1);
 		setCreature((Creature) gameScreen.getWorld().getEntityManager().getEntities().get(getCurrentEntityID()));
-
-		getCreature().getBoundingPolygon().setOffsetX(5);
 
 	}
 

@@ -1,6 +1,7 @@
 package game.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
@@ -14,22 +15,39 @@ public class Tree extends Entity {
 
 		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("atlas/Trees.atlas"));
 
-		int random = ((int) (Math.random() * 3) + 1);
+		int random = ((int) (Math.random() * 4) + 1);
 		String treeTexture = "Trees" + random;
 
 		switch (treeTexture) {
 		case "Trees1":
 			getBoundingPolygon().setOffsetX(28f);
+			Sprite sprite = new Sprite(textureAtlas.findRegion(treeTexture));
+			setSprite(sprite);
 
 			break;
 
 		case "Trees2":
 			getBoundingPolygon().setOffsetX(24f);
+			Sprite sprite2 = new Sprite(textureAtlas.findRegion(treeTexture));
+			setSprite(sprite2);
 
 			break;
 
 		case "Trees3":
 			getBoundingPolygon().setOffsetX(22f);
+			Sprite sprite3 = new Sprite(textureAtlas.findRegion(treeTexture));
+			setSprite(sprite3);
+
+			break;
+
+		case "Trees4":
+			getBoundingPolygon().setOffsetX(15f);
+			getBoundingPolygon().setOffsetY(8f);
+			Sprite sprite4 = new Sprite(new Texture(Gdx.files.internal("img/apple.png")));
+			setSolid(false);
+			sprite4.setSize(32, 32);
+			setSprite(sprite4);
+			
 
 			break;
 
@@ -40,8 +58,6 @@ public class Tree extends Entity {
 		super.getBoundingPolygon().setPosition(getX(), getY());
 		super.setTouchedTiles(world.getMap().findTiles(getBoundingPolygon()));
 
-		Sprite sprite = new Sprite(textureAtlas.findRegion(treeTexture));
-		setSprite(sprite);
 		super.getSprite().setX(getX());
 		super.getSprite().setY(getY());
 
@@ -60,6 +76,4 @@ public class Tree extends Entity {
 				+ ", toString()=" + super.toString() + "]";
 	}
 
-	
-	
 }

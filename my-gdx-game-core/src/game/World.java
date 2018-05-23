@@ -41,7 +41,6 @@ public class World implements Disposable {
 
 		spawnEntity(new Tree(50, 40, this));
 		spawnEntity(new Tree(100, 60, this));
-		spawnEntity(new Tree(64, 200, this));
 		spawnEntity(new Tree(100, 180, this));
 		spawnEntity(new Tree(80, 20, this));
 		spawnEntity(new Tree(250, 50, this));
@@ -67,7 +66,7 @@ public class World implements Disposable {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin();
 
-		// entityManager.debugRender(shapeRenderer);
+		entityManager.debugRender(shapeRenderer);
 		shapeRenderer.end();
 
 	}
@@ -79,6 +78,32 @@ public class World implements Disposable {
 		for (Tile tile : entity.getTouchedTiles()) {
 			getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().add(entity.getId());
 		}
+	}
+
+	public void destroyEntity(Entity entity) {
+		if (entityManager.getEntities().containsKey(entity.getId())) {
+
+			// Dispose löst ein render glitch aus --> Prüfen!
+			// entity.dispose();
+			entityManager.getEntities().remove(entity.getId());
+
+			for (Tile tile : entity.getTouchedTiles()) {
+
+				// evtl. eine Hashmap für die EntitIDs in Tile benutzen dann kann man hier die
+				// schleife sparen
+
+				for (int i = 0; i < getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().size(); i++) {
+
+					int temp = getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().get(i);
+
+					if (temp == entity.getId()) {
+						getMap().getTile(tile.getX(), tile.getY()).getEntityIDs().remove(i);
+					}
+				}
+
+			}
+		}
+
 	}
 
 	@Override

@@ -33,14 +33,16 @@ public abstract class AbstractScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
-		
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
 		stage.act(delta);
 		stage.draw();
 	}
 
 	public void showSettings() {
 		stage.clear();
+
+		Table table = new Table();
 
 		Label header = new Label("Settings", getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
 		header.setFontScale(1.5f);
@@ -77,7 +79,16 @@ public abstract class AbstractScreen implements Screen {
 
 		});
 
-		Table table = new Table();
+		CheckBox fps = new CheckBox(" Show FPS (coming soon)",
+				getApp().getAssetManager().get("skin/uiskin.json", Skin.class));
+
+		fps.addListener(new ClickListener() {
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+
+			}
+		});
 
 		if (this instanceof GameScreen) {
 			back.addListener(new ClickListener() {
@@ -113,6 +124,8 @@ public abstract class AbstractScreen implements Screen {
 
 		table.setFillParent(true);
 		table.add(header).pad(100, 300, 100, 300);
+		table.row();
+		table.add(fps).padBottom(30);
 		table.row();
 		table.add(fullscreen).padBottom(30);
 		table.row();

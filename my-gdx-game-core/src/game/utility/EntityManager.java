@@ -6,11 +6,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 
-import game.Tile;
 import game.World;
 import game.entity.Creature;
 import game.entity.Entity;
@@ -53,6 +55,9 @@ public class EntityManager implements Disposable {
 		}
 
 	}
+	
+	
+
 
 	public void debugRender(ShapeRenderer shapeRenderer) {
 
@@ -74,32 +79,6 @@ public class EntityManager implements Disposable {
 
 		}
 
-	}
-
-	public boolean collidingWithEntity(Entity entity) {
-
-		for (Tile tile : entity.getTouchedTiles()) {
-
-			if (tile.getEntityIDs().size() == 0) {
-				continue;
-			} else {
-
-				for (int id : tile.getEntityIDs()) {
-					if (id != 0 && id != entity.getId()) {
-
-						if (entity.colliding(entities.get(id))) {
-							return true;
-						}
-
-					} else {
-						continue;
-					}
-				}
-
-			}
-
-		}
-		return false;
 	}
 
 	@Override
