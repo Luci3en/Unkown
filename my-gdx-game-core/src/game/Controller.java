@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import game.entity.Creature;
 import game.entity.Entity;
+import game.entity.Tree;
 import game.screen.GameScreen;
 import game.utility.CameraStyles;
 
@@ -77,6 +78,15 @@ public class Controller implements InputProcessor {
 
 		case Input.Keys.D:
 			setPressed_D(true);
+			break;
+
+		case Input.Keys.T:
+
+			float x = (float) (Math.random() * Map.MAP_PIXEL_WIDTH - 32);
+			float y = (float) (Math.random() * Map.MAP_PIXEL_HEIGHT - 32);
+
+			gameScreen.getWorld().spawnEntity(new Tree(x, y, gameScreen.getWorld()));
+
 			break;
 
 		case Input.Keys.ESCAPE:

@@ -48,7 +48,6 @@ public class Tree extends Entity {
 			sprite4.setSize(32, 32);
 			setSprite(sprite4);
 			
-
 			break;
 
 		default:

@@ -55,27 +55,12 @@ public class EntityManager implements Disposable {
 		}
 
 	}
-	
-	
-
 
 	public void debugRender(ShapeRenderer shapeRenderer) {
 
 		for (Entry<Integer, Entity> entity : entities.entrySet()) {
 
-			entity.getValue().getBoundingPolygon().render(shapeRenderer);
-
-			if (entity.getValue() instanceof Creature) {
-				Creature temp = (Creature) entity.getValue();
-				temp.getWeapon().render(shapeRenderer);
-
-			}
-
-			for (int i = 0; i < entity.getValue().getTouchedTiles().size(); i++) {
-				shapeRenderer.rect(entity.getValue().getTouchedTiles().get(i).getX() * 32,
-						entity.getValue().getTouchedTiles().get(i).getY() * 32, 32, 32);
-
-			}
+			entity.getValue().debugRender(shapeRenderer);
 
 		}
 

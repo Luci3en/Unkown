@@ -14,7 +14,7 @@ import game.utility.BoundingPolygon;
 public class Creature extends Entity {
 
 	private Animation<TextureRegion> currentAnimation, up_walking, down_walking, left_walking, right_walking;
-	private float speed = 100;
+	private float speed = 250;
 	private float stateTime;
 	private boolean moving;
 	private Vector2 velocity;
@@ -107,90 +107,98 @@ public class Creature extends Entity {
 
 		// BUG: collision funktioniert eig. ziemlich gut allerdings sobald eine entity
 		// zu weit am rand eines Tiles ist
-		// bleibt man hängen...  eine mögliche lösung ist die collision in kleineren schritten zu callen als zwischen jedem frame
+		// bleibt man hängen... eine mögliche lösung ist die collision in kleineren
+		// schritten zu callen als zwischen jedem frame
 
 		// jonathanwhiting.com/tutorial/collision
-		float old_tempX = super.getX();
-		float old_tempY = super.getY();
 
-		for (Tile tile : getTouchedTiles()) {
+		int steps = 5;
 
-			if (tile.getEntityIDs().size() == 0) {
-				setTouchedTiles(world.getMap().findTiles(getBoundingPolygon()));
-				continue;
-			}
+		for (int i = 0; i < steps; i++) {
+			
+			float old_tempX = super.getX();
+			float old_tempY = super.getY();
 
-			else {
+			for (Tile tile : getTouchedTiles()) {
 
-				for (int id : tile.getEntityIDs()) {
+				if (tile.getEntityIDs().size() == 0) {
+					setTouchedTiles(world.getMap().findTiles(getBoundingPolygon()));
+					continue;
+				}
 
-					if (getVelocity().x != 0) {
+				else {
 
-						super.getBoundingPolygon().setPosition(super.getX() + getVelocity().x, super.getY());
-						super.setTouchedTiles(world.getMap().findTiles(super.getBoundingPolygon()));
+					for (int id : tile.getEntityIDs()) {
 
-						if (this.colliding(world.getEntityManager().getEntities().get(id))) {
+						if (getVelocity().x != 0) {
 
-							if (world.getEntityManager().getEntities().get(id).isSolid()) {
+							super.getBoundingPolygon().setPosition(super.getX() + getVelocity().x / steps,
+									super.getY());
 
-								super.getBoundingPolygon().setPosition(old_tempX, super.getY());
-								super.setX(old_tempX);
-								velocity.x = 0;
-							} else {
-								System.out.println(
-										"CreaturX is on" + world.getEntityManager().getEntities().get(id).getClass());
+							super.setTouchedTiles(world.getMap().findTiles(super.getBoundingPolygon()));
 
-								world.destroyEntity(world.getEntityManager().getEntities().get(id));
+							if (this.colliding(world.getEntityManager().getEntities().get(id))) {
 
-								super.setX(super.getX() + getVelocity().x);
-								super.setY(super.getY() + getVelocity().y);
-								super.getBoundingPolygon().setPosition(super.getX(), super.getY());
-								getVelocity().set(0, 0);
-								return;
+								if (world.getEntityManager().getEntities().get(id).isSolid()) {
+
+									super.getBoundingPolygon().setPosition(old_tempX, super.getY());
+									super.setX(old_tempX);
+									velocity.x = 0;
+								} else {
+
+									world.destroyEntity(world.getEntityManager().getEntities().get(id));
+
+									super.setX(super.getX() + getVelocity().x / steps);
+									super.setY(super.getY() + getVelocity().y / steps);
+									super.getBoundingPolygon().setPosition(super.getX(), super.getY());
+									getVelocity().set(0, 0);
+									continue;
+								}
+
 							}
 
 						}
 
-					}
+						if (getVelocity().y != 0) {
 
-					if (getVelocity().y != 0) {
+							super.getBoundingPolygon().setPosition(super.getX(),
+									super.getY() + getVelocity().y / steps);
+							super.setTouchedTiles(world.getMap().findTiles(getBoundingPolygon()));
 
-						super.getBoundingPolygon().setPosition(super.getX(), super.getY() + getVelocity().y);
-						super.setTouchedTiles(world.getMap().findTiles(getBoundingPolygon()));
+							if (this.colliding(world.getEntityManager().getEntities().get(id))) {
 
-						if (this.colliding(world.getEntityManager().getEntities().get(id))) {
+								if (world.getEntityManager().getEntities().get(id).isSolid()) {
+									super.getBoundingPolygon().setPosition(super.getX(), old_tempY);
+									super.setY(old_tempY);
+									velocity.y = 0;
 
-							if (world.getEntityManager().getEntities().get(id).isSolid()) {
-								super.getBoundingPolygon().setPosition(super.getX(), old_tempY);
-								super.setY(old_tempY);
-								velocity.y = 0;
+								} else {
 
-							} else {
-								System.out.println(
-										"CreaturY is on" + world.getEntityManager().getEntities().get(id).getClass());
+									world.destroyEntity(world.getEntityManager().getEntities().get(id));
 
-								world.destroyEntity(world.getEntityManager().getEntities().get(id));
+									super.setX(super.getX() + getVelocity().x / steps);
+									super.setY(super.getY() + getVelocity().y / steps);
+									super.getBoundingPolygon().setPosition(super.getX(), super.getY());
+									getVelocity().set(0, 0);
+									continue;
+								}
 
-								super.setX(super.getX() + getVelocity().x);
-								super.setY(super.getY() + getVelocity().y);
-								super.getBoundingPolygon().setPosition(super.getX(), super.getY());
-								getVelocity().set(0, 0);
-								return;
 							}
-
 						}
+
 					}
 
 				}
+
 			}
 
+			super.setX(super.getX() + getVelocity().x / steps);
+			super.setY(super.getY() + getVelocity().y / steps);
+			super.getBoundingPolygon().setPosition(super.getX(), super.getY());
+			getVelocity().set(0, 0);
+
 		}
-
-		super.setX(super.getX() + getVelocity().x);
-		super.setY(super.getY() + getVelocity().y);
-		super.getBoundingPolygon().setPosition(super.getX(), super.getY());
-		getVelocity().set(0, 0);
-
+		System.out.println("ONe CHECK");
 	}
 
 	@Override

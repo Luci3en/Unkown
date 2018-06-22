@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
@@ -31,7 +32,7 @@ public abstract class Entity implements Disposable {
 	public Entity(float x, float y, BoundingPolygon boundingPolygon) {
 		this.id = Entity.ID;
 		Entity.ID++;
-		
+
 		this.x = x;
 		this.y = y;
 		this.boundingPolygon = boundingPolygon;
@@ -50,6 +51,22 @@ public abstract class Entity implements Disposable {
 		this.boundingPolygon.setRectangleBoundary();
 		this.solid = solid;
 		this.touchedTiles = new ArrayList<Tile>();
+
+	}
+
+	public void debugRender(ShapeRenderer shapeRenderer) {
+		getBoundingPolygon().render(shapeRenderer);
+
+		if (this instanceof Creature) {
+			Creature temp = (Creature) this;
+			temp.getWeapon().render(shapeRenderer);
+
+		}
+
+		for (int i = 0; i < getTouchedTiles().size(); i++) {
+			shapeRenderer.rect(getTouchedTiles().get(i).getX() * 32, getTouchedTiles().get(i).getY() * 32, 32, 32);
+
+		}
 
 	}
 
